@@ -10,10 +10,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -42,6 +44,43 @@ public class GuiController implements Initializable {
 
     @FXML
     private Label scoreLabel;
+
+    @FXML
+    private AnchorPane startMenu;
+    @FXML
+    private Button startButton;
+
+
+    @FXML
+    private void handleStartGame(){
+        startMenu.setVisible(false);
+        gamePanel.setVisible(true);
+        brickPanel.setVisible(true);
+        scoreLabel.setVisible(true);
+        groupNotification.setVisible(true);
+
+        newGame(null);
+        gamePanel.requestFocus(); //focus of keys is changes to the game not start menu
+    }
+
+    @FXML
+    private void handleStartMenu(){
+        startMenu.setVisible(true);
+        gamePanel.setVisible(false);
+        brickPanel.setVisible(false);
+        scoreLabel.setVisible(false);
+        groupNotification.setVisible(false);
+
+        startMenu.requestFocus(); //focus of keys is changes to the game not start menu
+    }
+    @FXML
+    private Button exitButton;
+    @FXML
+    private Button instructionsButton;
+
+    @FXML
+    private Button pauseButton;
+
 
     public void bindScore(IntegerProperty scoreProperty) {
         if (scoreLabel != null) {
@@ -229,6 +268,18 @@ public class GuiController implements Initializable {
     }
 
     public void pauseGame(ActionEvent actionEvent) {
-        gamePanel.requestFocus();
+        if(isPause.getValue()){
+            timeLine.play();
+            isPause.setValue(false);
+            if(actionEvent != null){
+                ((Button) actionEvent.getSource()).setText("Pause");
+            }
+            gamePanel.requestFocus();
+        }else{
+            timeLine.pause();
+            isPause.setValue(true);
+            ((Button) actionEvent.getSource()).setText("Resume");
+        }
+
     }
 }
