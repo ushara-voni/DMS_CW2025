@@ -1,6 +1,7 @@
 package com.comp2042;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -10,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
@@ -51,6 +53,34 @@ public class GuiController implements Initializable {
     private Button startButton;
 
 
+
+    @FXML
+    private Button exitButton;
+
+
+    @FXML
+    private Button instructionsButton;
+
+
+    @FXML
+    private Button pauseButton;
+
+
+    @FXML
+    private AnchorPane instructionsPane;
+
+    @FXML
+    private void handleInstructions(ActionEvent event) {
+        startMenu.setVisible(false);
+        instructionsPane.setVisible(true);
+    }
+
+    @FXML
+    private void handleBackToMenu(ActionEvent event) {
+        instructionsPane.setVisible(false);
+        startMenu.setVisible(true);
+    }
+
     @FXML
     private void handleStartGame(){
         startMenu.setVisible(false);
@@ -59,7 +89,8 @@ public class GuiController implements Initializable {
         scoreLabel.setVisible(true);
         groupNotification.setVisible(true);
 
-        newGame(null);
+        // Initialize the actual game logic when Start is clicked
+        GameController gameController = new GameController(this);
         gamePanel.requestFocus(); //focus of keys is changes to the game not start menu
     }
 
@@ -73,13 +104,12 @@ public class GuiController implements Initializable {
 
         startMenu.requestFocus(); //focus of keys is changes to the game not start menu
     }
-    @FXML
-    private Button exitButton;
-    @FXML
-    private Button instructionsButton;
 
     @FXML
-    private Button pauseButton;
+    private void handleExitGame(){
+        javafx.application.Platform.exit();
+
+    }
 
 
     public void bindScore(IntegerProperty scoreProperty) {
@@ -265,7 +295,12 @@ public class GuiController implements Initializable {
         timeLine.play();
         isPause.setValue(Boolean.FALSE);
         isGameOver.setValue(Boolean.FALSE);
+
+
     }
+
+
+
 
     public void pauseGame(ActionEvent actionEvent) {
         if(isPause.getValue()){

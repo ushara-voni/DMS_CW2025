@@ -44,8 +44,23 @@
         <VBox alignment="CENTER" spacing="20" layoutX="50" layoutY="100">
             <Label text="TETRIS" style="-fx-font-size: 36px; -fx-text-fill: white;"/>
             <Button fx:id="startButton" text="Start Game" onAction="#handleStartGame" prefWidth="200" style="-fx-font-size: 18px;"/>
-            <Button fx:id="instructionsButton" text="Instructions" prefWidth="200" style="-fx-font-size: 18px;"/>
-            <Button fx:id="exitButton" text="Exit" prefWidth="200" style="-fx-font-size: 18px;"/>
+            <Button fx:id="instructionsButton" text="Instructions" onAction="#handleInstructions"  prefWidth="200" style="-fx-font-size: 18px;"/>
+            <Button fx:id="exitButton" text="Exit" onAction="#handleExitGame" prefWidth="200" style="-fx-font-size: 18px;"/>
+        </VBox>
+    </AnchorPane>
+
+    <AnchorPane fx:id="instructionsPane" visible="false" style="-fx-background-color: rgba(0, 0, 0);">
+        <VBox alignment="CENTER" spacing="20" layoutX="50" layoutY="50">
+            <Label text="HOW TO PLAY" style="-fx-font-size: 32px; -fx-text-fill: white;"/>
+
+            <Label text="← / A : Move Left" style="-fx-font-size: 18px; -fx-text-fill: white;"/>
+            <Label text="→ / D : Move Right" style="-fx-font-size: 18px; -fx-text-fill: white;"/>
+            <Label text="↑ / W : Rotate" style="-fx-font-size: 18px; -fx-text-fill: white;"/>
+            <Label text="↓ / S : Drop Faster" style="-fx-font-size: 18px; -fx-text-fill: white;"/>
+            <Label text="P : Pause/Resume" style="-fx-font-size: 18px; -fx-text-fill: white;"/>
+            <Label text="N : New Game" style="-fx-font-size: 18px; -fx-text-fill: white;"/>
+
+            <Button text="Back to Menu" onAction="#handleBackToMenu" prefWidth="200" style="-fx-font-size: 16px;"/>
         </VBox>
     </AnchorPane>
 
