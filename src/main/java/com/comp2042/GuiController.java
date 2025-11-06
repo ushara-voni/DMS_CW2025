@@ -1,5 +1,6 @@
 package com.comp2042;
 
+import com.comp2042.logic.bricks.Brick;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -19,8 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.scene.paint.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -64,6 +64,8 @@ public class GuiController implements Initializable {
 
     @FXML
     private Button pauseButton;
+    @FXML
+    private GridPane nextPiecePanel;
 
 
     @FXML
@@ -92,6 +94,7 @@ public class GuiController implements Initializable {
         // Initialize the actual game logic when Start is clicked
         GameController gameController = new GameController(this);
         gamePanel.requestFocus(); //focus of keys is changes to the game not start menu
+
     }
 
     @FXML
@@ -103,6 +106,7 @@ public class GuiController implements Initializable {
         groupNotification.setVisible(false);
 
         startMenu.requestFocus(); //focus of keys is changes to the game not start menu
+
     }
 
     @FXML
@@ -110,6 +114,11 @@ public class GuiController implements Initializable {
         javafx.application.Platform.exit();
 
     }
+
+
+
+
+
 
 
     public void bindScore(IntegerProperty scoreProperty) {
@@ -175,16 +184,27 @@ public class GuiController implements Initializable {
             for (int j = 0; j < boardMatrix[i].length; j++) {
                 Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
                 rectangle.setFill(Color.TRANSPARENT);
+                //change
+                rectangle.getStyleClass().add("cell-style");
+                //change
                 displayMatrix[i][j] = rectangle;
                 gamePanel.add(rectangle, j, i - 2);
             }
         }
+
+        //change
+        brickPanel.toFront();
+
+
 
         rectangles = new Rectangle[brick.getBrickData().length][brick.getBrickData()[0].length];
         for (int i = 0; i < brick.getBrickData().length; i++) {
             for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                 Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
                 rectangle.setFill(getFillColor(brick.getBrickData()[i][j]));
+                //change
+                rectangle.getStyleClass().addAll("cell-style", "brick");
+                //change
                 rectangles[i][j] = rectangle;
                 brickPanel.add(rectangle, j, i);
             }
@@ -240,6 +260,8 @@ public class GuiController implements Initializable {
         if (isPause.getValue() == Boolean.FALSE) {
             brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
             brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
+            //change
+            brickPanel.toFront();
             for (int i = 0; i < brick.getBrickData().length; i++) {
                 for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                     setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
@@ -316,5 +338,9 @@ public class GuiController implements Initializable {
             ((Button) actionEvent.getSource()).setText("Resume");
         }
 
+
     }
+
+
+
 }
