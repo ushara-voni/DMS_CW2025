@@ -11,6 +11,8 @@ public class GameController implements InputEventListener {
         board.createNewBrick();
         viewGuiController.setEventListener(this);
         viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
+        //change
+        viewGuiController.showNextPiece(board.getViewData());
         viewGuiController.bindScore(board.getScore().scoreProperty());
     }
 
@@ -29,11 +31,8 @@ public class GameController implements InputEventListener {
             }
 
             viewGuiController.refreshGameBackground(board.getBoardMatrix());
-
-        } else {
-            if (event.getEventSource() == EventSource.USER) {
-                board.getScore().add(1);
-            }
+            //change
+            viewGuiController.showNextPiece(board.getViewData());
         }
         return new DownData(clearRow, board.getViewData());
     }

@@ -26,6 +26,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class GuiController implements Initializable {
@@ -340,6 +341,25 @@ public class GuiController implements Initializable {
 
 
     }
+
+    public void showNextPiece(ViewData viewData) {
+        nextPiecePanel.getChildren().clear(); // clear previous preview
+        int[][] nextBrick = viewData.getNextBrickData();
+
+        for (int i = 0; i < nextBrick.length; i++) {
+            for (int j = 0; j < nextBrick[i].length; j++) {
+                if (nextBrick[i][j] != 0) {
+                    Rectangle rectangle = new Rectangle(18, 18); // smaller block for preview
+                    rectangle.setFill(getFillColor(nextBrick[i][j]));
+                    rectangle.setArcWidth(6);
+                    rectangle.setArcHeight(6);
+                    nextPiecePanel.add(rectangle, j, i);
+                }
+            }
+        }
+    }
+
+
 
 
 
