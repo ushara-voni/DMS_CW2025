@@ -73,6 +73,9 @@ public class GuiController implements Initializable {
     private AnchorPane instructionsPane;
 
     @FXML
+    private Label linesLabel;
+
+    @FXML
     private void handleInstructions(ActionEvent event) {
         startMenu.setVisible(false);
         instructionsPane.setVisible(true);
@@ -117,16 +120,18 @@ public class GuiController implements Initializable {
     }
 
 
-
-
-
-
-
     public void bindScore(IntegerProperty scoreProperty) {
         if (scoreLabel != null) {
             scoreLabel.textProperty().bind(scoreProperty.asString("Score: %d"));
         }
     }
+
+    public void bindLines(IntegerProperty linesProperty) {
+        if (linesLabel != null) {
+            linesLabel.textProperty().bind(linesProperty.asString("%d"));
+        }
+    }
+
 
     private Rectangle[][] displayMatrix;
 

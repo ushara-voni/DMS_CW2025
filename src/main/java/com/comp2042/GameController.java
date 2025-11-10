@@ -1,10 +1,14 @@
 package com.comp2042;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 
 public class GameController implements InputEventListener {
 
     private Board board = new SimpleBoard(33, 21);
 
     private final GuiController viewGuiController;
+    private final IntegerProperty linesCleared= new SimpleIntegerProperty(0);
 
     public GameController(GuiController c) {
         viewGuiController = c;
@@ -14,6 +18,7 @@ public class GameController implements InputEventListener {
         //change
         viewGuiController.showNextPiece(board.getViewData());
         viewGuiController.bindScore(board.getScore().scoreProperty());
+        viewGuiController.bindLines(linesClearedProperty());
     }
 
     @Override
@@ -25,6 +30,7 @@ public class GameController implements InputEventListener {
             clearRow = board.clearRows();
             if (clearRow.getLinesRemoved() > 0) {
                 board.getScore().add(clearRow.getScoreBonus());
+                linesCleared.set(linesCleared.get() + clearRow.getLinesRemoved());
             }
             if (board.createNewBrick()) {
                 viewGuiController.gameOver();
@@ -60,5 +66,9 @@ public class GameController implements InputEventListener {
     public void createNewGame() {
         board.newGame();
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
+    }
+
+    public IntegerProperty linesClearedProperty(){
+        return linesCleared;
     }
 }

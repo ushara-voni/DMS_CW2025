@@ -64,7 +64,7 @@
                         <StackPane style="-fx-border-color: lightgray; -fx-border-width: 2; -fx-padding: 5; -fx-background-color: black;"
                                    prefWidth="100" prefHeight="35">
                             <Label fx:id="levelLabel"
-                                   text="15"
+                                   text="1"
                                    style="-fx-font-size: 16px; -fx-text-fill: white;"/>
                         </StackPane>
                     </VBox>
@@ -76,7 +76,7 @@
                         <StackPane style="-fx-border-color: lightgray; -fx-border-width: 2; -fx-padding: 5; -fx-background-color: black;"
                                    prefWidth="100" prefHeight="35">
                             <Label fx:id="linesLabel"
-                                   text="084"
+                                   text="0"
                                    style="-fx-font-size: 16px; -fx-text-fill: white;"/>
                         </StackPane>
                     </VBox>
@@ -88,7 +88,7 @@
 
 
             <Group fx:id="groupNotification"
-                   layoutX="14" layoutY="203">
+                   layoutX="100" layoutY="203">
                 <VBox alignment="CENTER">
                     <GameOverPanel fx:id="gameOverPanel"/>
                 </VBox>
