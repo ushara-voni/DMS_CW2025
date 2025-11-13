@@ -4,6 +4,7 @@ import com.comp2042.logic.bricks.Brick;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -65,9 +66,18 @@ public class GuiController implements Initializable {
 
     @FXML
     private Button pauseButton;
+
+    @FXML
+    private Button homeButton;
+
+    @FXML
+    private Button restartButton;
+
     @FXML
     private GridPane nextPiecePanel;
 
+    @FXML
+    private Label levelLabel;
 
     @FXML
     private AnchorPane instructionsPane;
@@ -85,29 +95,66 @@ public class GuiController implements Initializable {
     private void handleBackToMenu(ActionEvent event) {
         instructionsPane.setVisible(false);
         startMenu.setVisible(true);
+        gameOverPanel.setVisible(false);
     }
 
     @FXML
-    private void handleStartGame(){
+    private void restartGame(ActionEvent event){
+        gameOverPanel.setVisible(false);
+        newGame(null);
+
+    }
+
+    @FXML
+    private void handleStartGame() {
+        // Stop old game if it's still running
+        if (gameController != null) {
+            gameController.stopGame();
+        }
+
+        // Clear old bricks from panels
+        gamePanel.getChildren().clear();
+        brickPanel.getChildren().clear();
+        nextPiecePanel.getChildren().clear();
+        groupNotification.getChildren().clear();
+
         startMenu.setVisible(false);
+        gameOverPanel.setVisible(false);
         gamePanel.setVisible(true);
         brickPanel.setVisible(true);
         scoreLabel.setVisible(true);
         groupNotification.setVisible(true);
 
-        // Initialize the actual game logic when Start is clicked
-        GameController gameController = new GameController(this);
-        gamePanel.requestFocus(); //focus of keys is changes to the game not start menu
+        // 🚫 Prevent top buttons from stealing focus
+        pauseButton.setFocusTraversable(false);
+        homeButton.setFocusTraversable(false);
+        restartButton.setFocusTraversable(false);
 
+        // Start new game
+        gameController = new GameController(this);
+
+        // ✅ force focus on the game panel after layout is updated
+        Platform.runLater(() -> {
+            gamePanel.requestFocus();
+            System.out.println("Focus given to gamePanel");
+        });
     }
+
 
     @FXML
     private void handleStartMenu(){
+        if (gameController != null) {
+            gameController.stopGame();
+        }
+        if (timeLine != null) {
+            timeLine.stop();  //  stop bricks from falling
+        }
         startMenu.setVisible(true);
         gamePanel.setVisible(false);
         brickPanel.setVisible(false);
         scoreLabel.setVisible(false);
         groupNotification.setVisible(false);
+        gameOverPanel.setVisible(false);
 
         startMenu.requestFocus(); //focus of keys is changes to the game not start menu
 
@@ -122,7 +169,7 @@ public class GuiController implements Initializable {
 
     public void bindScore(IntegerProperty scoreProperty) {
         if (scoreLabel != null) {
-            scoreLabel.textProperty().bind(scoreProperty.asString("Score: %d"));
+            scoreLabel.textProperty().bind(scoreProperty.asString("%d"));
         }
     }
 
@@ -141,6 +188,8 @@ public class GuiController implements Initializable {
 
     private Timeline timeLine;
 
+    private GameController gameController;
+
     private final BooleanProperty isPause = new SimpleBooleanProperty();
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
@@ -148,7 +197,25 @@ public class GuiController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
+        // Disable focus on all menu and control buttons
+        Button[] buttons = { startButton, instructionsButton, exitButton, pauseButton, restartButton, homeButton};
+        for (Button b : buttons) {
+            if (b != null) b.setFocusTraversable(false);
+        }
+
+        // optional: disable game over panel buttons if accessible
+        if (gameOverPanel != null) {
+            if (gameOverPanel.getRestartButton() != null)
+                gameOverPanel.getRestartButton().setFocusTraversable(false);
+            if (gameOverPanel.getHomeButton() != null)
+                gameOverPanel.getHomeButton().setFocusTraversable(false);
+        }
+
+
+
+        brickPanel.setFocusTraversable(false);
         gamePanel.setFocusTraversable(true);
+        gamePanel.setOnMouseClicked(e -> gamePanel.requestFocus());
         gamePanel.requestFocus();
         gamePanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -185,6 +252,9 @@ public class GuiController implements Initializable {
     }
 
     public void initGameView(int[][] boardMatrix, ViewData brick) {
+        if (timeLine != null) {
+            timeLine.stop(); // stop any old game timeline
+        }
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
         for (int i = 2; i < boardMatrix.length; i++) {
             for (int j = 0; j < boardMatrix[i].length; j++) {
@@ -310,23 +380,29 @@ public class GuiController implements Initializable {
 
 
     public void gameOver() {
+//        timeLine.stop();
+//        gameOverPanel.setVisible(true);
+//        isGameOver.setValue(Boolean.TRUE);
         timeLine.stop();
-        gameOverPanel.setVisible(true);
-        isGameOver.setValue(Boolean.TRUE);
+
+        // get the score (assuming your scoreLabel shows current score)
+        int finalScore = Integer.parseInt(scoreLabel.getText());
+
+        showGameOverScreen(finalScore);
     }
 
     public void newGame(ActionEvent actionEvent) {
-        timeLine.stop();
+        if (timeLine != null) {
+            timeLine.stop();
+        }
         gameOverPanel.setVisible(false);
         eventListener.createNewGame();
-        gamePanel.requestFocus();
-        timeLine.play();
         isPause.setValue(Boolean.FALSE);
         isGameOver.setValue(Boolean.FALSE);
+        timeLine.play();
 
-
+        Platform.runLater(() -> gamePanel.requestFocus());
     }
-
 
 
 
@@ -363,6 +439,18 @@ public class GuiController implements Initializable {
             }
         }
     }
+
+    public void showGameOverScreen(int finalScore) {
+        gameOverPanel.setScore(finalScore);
+        gameOverPanel.setVisible(true);
+        isGameOver.setValue(Boolean.TRUE);
+
+        // connect buttons to controller methods
+        gameOverPanel.getRestartButton().setOnAction(e -> restartGame(null));
+        gameOverPanel.getHomeButton().setOnAction(e -> handleStartMenu());
+    }
+
+
 
 
 

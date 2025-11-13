@@ -59,11 +59,23 @@
     -fx-font-size: 40px;
     -fx-font-weight: bold;
 }
-
+/*
 .gameOverStyle {
     -fx-font-family: "Let's go Digital";
     -fx-font-size: 48;
-    -fx-background-color: red;
+    -fx-background-color: blue;
+}*/
+
+.gameOverStyle {
+    -fx-font-family: "Let's go Digital", sans-serif;
+    -fx-font-size: 64; /* bigger for emphasis */
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to bottom, #ff4c4c, #ff0000); /* red gradient text */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 8, 0.5, 2, 2); /* shadow for depth */
+    -fx-background-color: rgba(0, 0, 0, 0.7); /* semi-transparent black background */
+    -fx-background-radius: 15; /* rounded corners */
+    -fx-padding: 20 40 20 40; /* space around text */
+    -fx-alignment: center;
 }
 
 .scoreClass{

@@ -1,15 +1,17 @@
 package com.comp2042;
+import javafx.animation.Timeline;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 
+
 public class GameController implements InputEventListener {
 
-    private Board board = new SimpleBoard(33, 21);
+    private Board board = new SimpleBoard(33, 15);
 
     private final GuiController viewGuiController;
     private final IntegerProperty linesCleared= new SimpleIntegerProperty(0);
-
+    private Timeline timeLine;
     public GameController(GuiController c) {
         viewGuiController = c;
         board.createNewBrick();
@@ -67,6 +69,13 @@ public class GameController implements InputEventListener {
         board.newGame();
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
     }
+
+    public void stopGame() {
+        if (timeLine != null) {
+            timeLine.stop();
+        }
+    }
+
 
     public IntegerProperty linesClearedProperty(){
         return linesCleared;
