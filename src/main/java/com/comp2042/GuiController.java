@@ -44,7 +44,10 @@ public class GuiController implements Initializable {
     private GridPane brickPanel;
 
     @FXML
-    private GameOverPanel gameOverPanel;
+    private AnchorPane gameOverPanel;
+
+    @FXML
+    private Label finalScoreLabel;
 
     @FXML
     private Label scoreLabel;
@@ -125,7 +128,7 @@ public class GuiController implements Initializable {
         scoreLabel.setVisible(true);
         groupNotification.setVisible(true);
 
-        // 🚫 Prevent top buttons from stealing focus
+        // Prevent top buttons from stealing focus
         pauseButton.setFocusTraversable(false);
         homeButton.setFocusTraversable(false);
         restartButton.setFocusTraversable(false);
@@ -133,7 +136,7 @@ public class GuiController implements Initializable {
         // Start new game
         gameController = new GameController(this);
 
-        // ✅ force focus on the game panel after layout is updated
+        // force focus on the game panel after layout is updated
         Platform.runLater(() -> {
             gamePanel.requestFocus();
             System.out.println("Focus given to gamePanel");
@@ -202,15 +205,6 @@ public class GuiController implements Initializable {
         for (Button b : buttons) {
             if (b != null) b.setFocusTraversable(false);
         }
-
-        // optional: disable game over panel buttons if accessible
-        if (gameOverPanel != null) {
-            if (gameOverPanel.getRestartButton() != null)
-                gameOverPanel.getRestartButton().setFocusTraversable(false);
-            if (gameOverPanel.getHomeButton() != null)
-                gameOverPanel.getHomeButton().setFocusTraversable(false);
-        }
-
 
 
         brickPanel.setFocusTraversable(false);
@@ -380,14 +374,9 @@ public class GuiController implements Initializable {
 
 
     public void gameOver() {
-//        timeLine.stop();
-//        gameOverPanel.setVisible(true);
-//        isGameOver.setValue(Boolean.TRUE);
+
         timeLine.stop();
-
-        // get the score (assuming your scoreLabel shows current score)
         int finalScore = Integer.parseInt(scoreLabel.getText());
-
         showGameOverScreen(finalScore);
     }
 
@@ -440,14 +429,12 @@ public class GuiController implements Initializable {
         }
     }
 
+
     public void showGameOverScreen(int finalScore) {
-        gameOverPanel.setScore(finalScore);
         gameOverPanel.setVisible(true);
         isGameOver.setValue(Boolean.TRUE);
-
-        // connect buttons to controller methods
-        gameOverPanel.getRestartButton().setOnAction(e -> restartGame(null));
-        gameOverPanel.getHomeButton().setOnAction(e -> handleStartMenu());
+        gameOverPanel.toFront();
+        finalScoreLabel.setText("Score: " + finalScore );
     }
 
 

@@ -85,9 +85,6 @@
 
             </Group>
 
-            <VBox alignment="CENTER" layoutX="0" layoutY="200">
-                <GameOverPanel fx:id="gameOverPanel"/>
-            </VBox>
 
 
 
@@ -116,6 +113,28 @@
             <Button text="Back to Menu" onAction="#handleBackToMenu" prefWidth="200" style="-fx-font-size: 16px;"/>
         </VBox>
     </AnchorPane>
+
+    <AnchorPane fx:id="gameOverPanel" visible="false" style="-fx-background-color: rgba(0, 0, 0, 0.85);">
+        <VBox alignment="CENTER" spacing="20" layoutX="50" layoutY="100">
+            <Label text="GAME OVER"
+                   style="-fx-font-size: 48px; -fx-text-fill: red; -fx-font-weight: bold;"/>
+
+            <Label fx:id="finalScoreLabel"
+                   text="Score: 0"
+                   style="-fx-font-size: 24px; -fx-text-fill: white;"/>
+
+            <Button text="Restart"
+                    onAction="#restartGame"
+                    prefWidth="200"
+                    style="-fx-font-size: 18px;"/>
+
+            <Button text="Back to Menu"
+                    onAction="#handleStartMenu"
+                    prefWidth="200"
+                    style="-fx-font-size: 18px;"/>
+        </VBox>
+    </AnchorPane>
+
 
     <stylesheets>
         <URL value="@window_style.css"/>
