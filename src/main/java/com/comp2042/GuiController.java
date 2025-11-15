@@ -43,28 +43,11 @@ public class GuiController implements Initializable {
     @FXML
     private GridPane brickPanel;
 
-    @FXML
-    private AnchorPane gameOverPanel;
-
-    @FXML
-    private Label finalScoreLabel;
 
     @FXML
     private Label scoreLabel;
 
-    @FXML
-    private AnchorPane startMenu;
-    @FXML
-    private Button startButton;
 
-
-
-    @FXML
-    private Button exitButton;
-
-
-    @FXML
-    private Button instructionsButton;
 
 
     @FXML
@@ -79,95 +62,32 @@ public class GuiController implements Initializable {
     @FXML
     private GridPane nextPiecePanel;
 
-    @FXML
-    private Label levelLabel;
-
-    @FXML
-    private AnchorPane instructionsPane;
 
     @FXML
     private Label linesLabel;
 
-    @FXML
-    private void handleInstructions(ActionEvent event) {
-        startMenu.setVisible(false);
-        instructionsPane.setVisible(true);
-    }
-
-    @FXML
-    private void handleBackToMenu(ActionEvent event) {
-        instructionsPane.setVisible(false);
-        startMenu.setVisible(true);
-        gameOverPanel.setVisible(false);
-    }
 
     @FXML
     private void restartGame(ActionEvent event){
-        gameOverPanel.setVisible(false);
         newGame(null);
 
     }
 
-    @FXML
-    private void handleStartGame() {
-        // Stop old game if it's still running
-        if (gameController != null) {
-            gameController.stopGame();
-        }
-
-        // Clear old bricks from panels
-        gamePanel.getChildren().clear();
-        brickPanel.getChildren().clear();
-        nextPiecePanel.getChildren().clear();
-        groupNotification.getChildren().clear();
-
-        startMenu.setVisible(false);
-        gameOverPanel.setVisible(false);
-        gamePanel.setVisible(true);
-        brickPanel.setVisible(true);
-        scoreLabel.setVisible(true);
-        groupNotification.setVisible(true);
-
-        // Prevent top buttons from stealing focus
-        pauseButton.setFocusTraversable(false);
-        homeButton.setFocusTraversable(false);
-        restartButton.setFocusTraversable(false);
-
-        // Start new game
-        gameController = new GameController(this);
-
-        // force focus on the game panel after layout is updated
-        Platform.runLater(() -> {
-            gamePanel.requestFocus();
-            System.out.println("Focus given to gamePanel");
-        });
-    }
-
 
     @FXML
-    private void handleStartMenu(){
-        if (gameController != null) {
-            gameController.stopGame();
+    private void handleStartMenu() {
+        if (mainApp != null) {
+            try {
+                mainApp.showMainMenu();
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Optional: alert the user if loading fails
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to load Main Menu.");
+                alert.showAndWait();
+            }
         }
-        if (timeLine != null) {
-            timeLine.stop();  //  stop bricks from falling
-        }
-        startMenu.setVisible(true);
-        gamePanel.setVisible(false);
-        brickPanel.setVisible(false);
-        scoreLabel.setVisible(false);
-        groupNotification.setVisible(false);
-        gameOverPanel.setVisible(false);
-
-        startMenu.requestFocus(); //focus of keys is changes to the game not start menu
-
     }
 
-    @FXML
-    private void handleExitGame(){
-        javafx.application.Platform.exit();
-
-    }
 
 
     public void bindScore(IntegerProperty scoreProperty) {
@@ -197,11 +117,13 @@ public class GuiController implements Initializable {
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
+    private Main mainApp;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
         // Disable focus on all menu and control buttons
-        Button[] buttons = { startButton, instructionsButton, exitButton, pauseButton, restartButton, homeButton};
+        Button[] buttons = {  pauseButton, restartButton, homeButton};
         for (Button b : buttons) {
             if (b != null) b.setFocusTraversable(false);
         }
@@ -237,7 +159,7 @@ public class GuiController implements Initializable {
                 }
             }
         });
-        gameOverPanel.setVisible(false);
+
 
         final Reflection reflection = new Reflection();
         reflection.setFraction(0.8);
@@ -373,18 +295,13 @@ public class GuiController implements Initializable {
 
 
 
-    public void gameOver() {
 
-        timeLine.stop();
-        int finalScore = Integer.parseInt(scoreLabel.getText());
-        showGameOverScreen(finalScore);
-    }
 
     public void newGame(ActionEvent actionEvent) {
         if (timeLine != null) {
             timeLine.stop();
         }
-        gameOverPanel.setVisible(false);
+
         eventListener.createNewGame();
         isPause.setValue(Boolean.FALSE);
         isGameOver.setValue(Boolean.FALSE);
@@ -430,13 +347,33 @@ public class GuiController implements Initializable {
     }
 
 
-    public void showGameOverScreen(int finalScore) {
-        gameOverPanel.setVisible(true);
-        isGameOver.setValue(Boolean.TRUE);
-        gameOverPanel.toFront();
-        finalScoreLabel.setText("Score: " + finalScore );
+
+
+    public void setMainApp(Main main) {
+        this.mainApp = main;
     }
 
+    public void startGame() {
+        if (gameController != null) {
+            gameController.stopGame();
+        }
+        gameController = new GameController(this);
+    }
+
+    public void gameOver() {
+        timeLine.stop();
+        isGameOver.set(true);
+        if (mainApp != null) {
+            try {
+                mainApp.showGameOverScreen(Integer.parseInt(scoreLabel.getText()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Optional: show an alert if loading fails
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to load Game Over screen.");
+                alert.showAndWait();
+            }
+        }
+    }
 
 
 
