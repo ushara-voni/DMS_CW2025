@@ -1,6 +1,7 @@
 package com.comp2042;
 
 import com.comp2042.logic.bricks.Brick;
+import com.comp2042.logic.bricks.TetrominoType;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -213,39 +214,15 @@ public class GuiController implements Initializable {
         timeLine.play();
     }
 
-    private Paint getFillColor(int i) {
-        Paint returnPaint;
-        switch (i) {
-            case 0:
-                returnPaint = Color.TRANSPARENT;
-                break;
-            case 1:
-                returnPaint = Color.AQUA;
-                break;
-            case 2:
-                returnPaint = Color.BLUEVIOLET;
-                break;
-            case 3:
-                returnPaint = Color.DARKGREEN;
-                break;
-            case 4:
-                returnPaint = Color.YELLOW;
-                break;
-            case 5:
-                returnPaint = Color.RED;
-                break;
-            case 6:
-                returnPaint = Color.BEIGE;
-                break;
-            case 7:
-                returnPaint = Color.BURLYWOOD;
-                break;
-            default:
-                returnPaint = Color.WHITE;
-                break;
+    private Paint getFillColor(int id) {
+        if (id == 0) {
+            return Color.TRANSPARENT;
         }
-        return returnPaint;
+
+        TetrominoType type = TetrominoType.values()[id - 1];
+        return type.getColor();
     }
+
 
 
     private void refreshBrick(ViewData brick) {
