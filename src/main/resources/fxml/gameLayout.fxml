@@ -37,8 +37,8 @@
                 <!-- Game Board -->
                 <BorderPane styleClass="gameBoard" fx:id="gameBoard">
                     <center>
-                        <GridPane fx:id="gamePanel" hgap="1" vgap="1"  prefWidth="320" prefHeight="650"
-                                  minWidth="320" minHeight="655"/>
+                        <GridPane fx:id="gamePanel" hgap="1" vgap="1"  prefWidth="315" prefHeight="649"
+                                  minWidth="315" minHeight="649"/>
                     </center>
                 </BorderPane>
 

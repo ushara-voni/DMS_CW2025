@@ -59,12 +59,7 @@
     -fx-font-size: 40px;
     -fx-font-weight: bold;
 }
-/*
-.gameOverStyle {
-    -fx-font-family: "Let's go Digital";
-    -fx-font-size: 48;
-    -fx-background-color: blue;
-}*/
+
 
 .gameOverStyle {
     -fx-font-family: "Let's go Digital", sans-serif;
@@ -87,11 +82,11 @@
 
 #gamePanel {
     -fx-background-color: #1d1d1d;       /* dark grey / near black */
-    -fx-padding: 5;
+    -fx-padding: 0;
     -fx-hgap: 0;
     -fx-vgap: 0;
     -fx-border-color: #2e2e2e;
-    -fx-border-width: 4;
+    -fx-border-width: 0;
 }
 
 .cell-style {
