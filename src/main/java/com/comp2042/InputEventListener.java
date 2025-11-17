@@ -3,6 +3,7 @@ package com.comp2042;
 public interface InputEventListener {
 
     DownData onDownEvent(MoveEvent event);
+    DownData onHardDropEvent(MoveEvent event);
 
     ViewData onLeftEvent(MoveEvent event);
 

@@ -83,11 +83,7 @@
             </HBox>
 
             <Group fx:id="groupNotification" layoutX="50" layoutY="200">
-
             </Group>
-
-
-
 
         </Pane>
 

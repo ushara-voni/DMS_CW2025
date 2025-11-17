@@ -48,6 +48,9 @@ public class GuiController implements Initializable {
     @FXML
     private Label scoreLabel;
 
+    @FXML
+    private Label levelLabel;
+
 
 
 
@@ -102,6 +105,13 @@ public class GuiController implements Initializable {
             linesLabel.textProperty().bind(linesProperty.asString("%d"));
         }
     }
+
+    public void bindLevel(IntegerProperty levelProperty) {
+        if (levelLabel != null) {
+            levelLabel.textProperty().bind(levelProperty.asString("%d"));
+        }
+    }
+
 
 
     private Rectangle[][] displayMatrix;
@@ -158,6 +168,11 @@ public class GuiController implements Initializable {
                 if (keyEvent.getCode() == KeyCode.N) {
                     newGame(null);
                 }
+                if (keyEvent.getCode() == KeyCode.SPACE) {
+                    hardDrop(new MoveEvent(EventType.HARD_DROP, EventSource.USER));
+                    keyEvent.consume();
+                }
+
             }
         });
 
@@ -177,15 +192,12 @@ public class GuiController implements Initializable {
             for (int j = 0; j < boardMatrix[i].length; j++) {
                 Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
                 rectangle.setFill(Color.TRANSPARENT);
-                //change
                 rectangle.getStyleClass().add("cell-style");
-                //change
                 displayMatrix[i][j] = rectangle;
                 gamePanel.add(rectangle, j, i - 2);
             }
         }
 
-        //change
         brickPanel.toFront();
 
 
@@ -195,9 +207,7 @@ public class GuiController implements Initializable {
             for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                 Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
                 rectangle.setFill(getFillColor(brick.getBrickData()[i][j]));
-                //change
                 rectangle.getStyleClass().addAll("cell-style", "brick");
-                //change
                 rectangles[i][j] = rectangle;
                 brickPanel.add(rectangle, j, i);
             }
@@ -327,6 +337,7 @@ public class GuiController implements Initializable {
 
 
     public void setMainApp(Main main) {
+
         this.mainApp = main;
     }
 
@@ -351,6 +362,43 @@ public class GuiController implements Initializable {
             }
         }
     }
+
+    private void hardDrop(MoveEvent event) {
+        if (isPause.getValue() == Boolean.FALSE) {
+            DownData downData = eventListener.onHardDropEvent(event);
+
+            if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
+                NotificationPanel panel =
+                        new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
+                groupNotification.getChildren().add(panel);
+                panel.showScore(groupNotification.getChildren());
+            }
+
+            // Update the falling piece (the new spawned one)
+            refreshBrick(downData.getViewData());
+        }
+
+        gamePanel.requestFocus();
+    }
+
+    public void setSpeedForLevel(int level) {
+        if (timeLine != null) {
+            timeLine.setRate(1 + (level - 1) * 0.2);
+            // Level 1 → 1.0x
+            // Level 2 → 1.2x
+            // Level 3 → 1.4x   etc.
+        }
+    }
+
+    public void showLevelUp(int newLevel) {
+        NotificationPanel levelpanel = new NotificationPanel("LEVEL " + newLevel);
+        groupNotification.getChildren().add(levelpanel);
+        levelpanel.showLevel(groupNotification.getChildren());
+    }
+
+
+
+
 
 
 
