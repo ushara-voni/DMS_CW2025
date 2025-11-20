@@ -130,6 +130,11 @@ public class GuiController implements Initializable {
 
     private Main mainApp;
 
+    // ghost rendering
+    private Rectangle[][] ghostRectangles;   // same size as displayMatrix (board)
+    private static final double GHOST_OPACITY = 0.5;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
@@ -212,6 +217,10 @@ public class GuiController implements Initializable {
                 brickPanel.add(rectangle, j, i);
             }
         }
+
+        // inside initGameView after displayMatrix filling
+        ensureGhostArray();
+
         brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
         brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
 
@@ -244,6 +253,15 @@ public class GuiController implements Initializable {
             for (int i = 0; i < brick.getBrickData().length; i++) {
                 for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                     setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
+                }
+            }
+            if (eventListener != null) {
+                try {
+                    // You'll need to implement getBoardMatrix() in your InputEventListener / GameController
+                    int[][] boardSnapshot = eventListener.getBoardMatrix();
+                    updateGhost(brick, boardSnapshot);
+                } catch (UnsupportedOperationException uoe) {
+                    // if not implemented, silently skip; or log
                 }
             }
         }
@@ -395,6 +413,99 @@ public class GuiController implements Initializable {
         groupNotification.getChildren().add(levelpanel);
         levelpanel.showLevel(groupNotification.getChildren());
     }
+
+    private void clearGhost() {
+        if (ghostRectangles == null || displayMatrix == null) return;
+
+        for (int i = 2; i < ghostRectangles.length; i++) {
+            for (int j = 0; j < ghostRectangles[i].length; j++) {
+                Rectangle ghost = ghostRectangles[i][j];
+                if (ghost != null) ghost.setVisible(false);
+            }
+        }
+    }
+
+    private void ensureGhostArray() {
+        if (displayMatrix == null || ghostRectangles != null) return;
+
+        int rows = displayMatrix.length;
+        int cols = displayMatrix[0].length;
+        ghostRectangles = new Rectangle[rows][cols];
+
+        for (int i = 2; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                Rectangle r = new Rectangle(BRICK_SIZE, BRICK_SIZE);
+                r.setFill(Color.TRANSPARENT);
+                r.setOpacity(GHOST_OPACITY);
+                r.getStyleClass().addAll("cell-style", "ghost");
+                r.setMouseTransparent(true);
+                r.setVisible(false);
+
+                ghostRectangles[i][j] = r;
+                gamePanel.add(r, j, i - 2);
+            }
+        }
+    }
+
+    private boolean collides(int[][] board, int[][] shape, int x, int y) {
+        for (int r = 0; r < shape.length; r++) {
+            for (int c = 0; c < shape[r].length; c++) {
+
+                if (shape[r][c] == 0) continue;
+
+                int boardR = y + r;
+                int boardC = x + c;
+
+                if (boardR < 0 || boardR >= board.length) return true;
+                if (boardC < 0 || boardC >= board[boardR].length) return true;
+                if (board[boardR][boardC] != 0) return true;
+            }
+        }
+        return false;
+    }
+
+    public void updateGhost(ViewData viewData, int[][] board) {
+        if (viewData == null || board == null) return;
+
+        ensureGhostArray();
+        clearGhost();
+
+        int startX = viewData.getxPosition();
+        int startY = viewData.getyPosition();
+        int[][] shape = viewData.getBrickData();
+
+        int candidateY = startY;
+        while (!collides(board, shape, startX, candidateY + 1)) {
+            candidateY++;
+        }
+
+        for (int r = 0; r < shape.length; r++) {
+            for (int c = 0; c < shape[r].length; c++) {
+                if (shape[r][c] == 0) continue;
+
+                int boardR = candidateY + r;
+                int boardC = startX + c;
+
+                if (boardR < 2 || boardR >= ghostRectangles.length) continue;
+
+                Rectangle ghost = ghostRectangles[boardR][boardC];
+                if (ghost == null) continue;
+
+                Paint base = getFillColor(shape[r][c]);
+                if (base instanceof Color col) {
+                    ghost.setFill(Color.color(col.getRed(), col.getGreen(), col.getBlue(), GHOST_OPACITY));
+                } else {
+                    ghost.setFill(base);
+                    ghost.setOpacity(GHOST_OPACITY);
+                }
+
+                ghost.setArcHeight(9);
+                ghost.setArcWidth(9);
+                ghost.setVisible(true);
+            }
+        }
+    }
+
 
 
 

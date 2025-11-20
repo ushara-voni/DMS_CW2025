@@ -135,6 +135,10 @@ public class GameController implements InputEventListener {
         return level;
     }
 
+    public int[][] getBoardMatrix() {
+        return board.getBoardMatrix();   // return the live board state
+    }
+
 
 
 }

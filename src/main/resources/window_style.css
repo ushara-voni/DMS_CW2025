@@ -105,3 +105,6 @@
     -fx-padding: 10px;
 }
 
+.ghost {
+    -fx-stroke: transparent;
+}
