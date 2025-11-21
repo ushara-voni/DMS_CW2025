@@ -6,17 +6,19 @@
 
 <VBox fx:controller="com.comp2042.MainMenuController"
       xmlns:fx="http://javafx.com/fxml"
-      alignment="CENTER" spacing="20" style="-fx-background-color: black; -fx-padding: 50;">
+      alignment="CENTER" spacing="20"
+      stylesheets="@../styles/mainmenu.css">
 
-    <Label text="TETRIS" style="-fx-font-size: 48px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+    <Label text="TETRIS" styleClass="label-title"/>
 
     <Button fx:id="startButton" text="Start Game" onAction="#handleStartGame"
-            prefWidth="200" style="-fx-font-size: 18px;"/>
+            prefWidth="200" styleClass="menu-button"/>
 
     <Button fx:id="instructionsButton" text="Instructions" onAction="#handleInstructions"
-            prefWidth="200" style="-fx-font-size: 18px;"/>
+            prefWidth="200" styleClass="menu-button"/>
 
     <Button fx:id="exitButton" text="Exit" onAction="#handleExit"
-            prefWidth="200" style="-fx-font-size: 18px;"/>
+            prefWidth="200" styleClass="menu-button"/>
 
 </VBox>
+

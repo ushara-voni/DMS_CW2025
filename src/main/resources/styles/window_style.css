@@ -1,17 +1,10 @@
 .root {
-    -fx-background-image: url("background_image.png");
-
+    -fx-background-color: linear-gradient(to bottom, #FFC0CB, #FFB6C1, #FFDDEE);
 }
 
-
-.nextBrick {
-    -fx-border-width: 2px;
-    -fx-border-color: whitesmoke;
-    -fx-border-radius: 17px;
-}
 
 .gameBoard {
-    -fx-border-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-border-color:  #E76D83;
     -fx-border-width: 15px;
     -fx-border-radius: 12px;
 }
@@ -32,7 +25,6 @@
     -fx-background-insets: 0, 1, 4, 5, 6;
     -fx-background-radius: 9, 8, 5, 4, 3;
     -fx-padding: 8;
-    /*-fx-font-family: "Helvetica";*/
     -fx-font-family: "Let's go Digital";
     -fx-font-size: 22px;
     -fx-font-weight: bold;
@@ -63,13 +55,13 @@
 
 .gameOverStyle {
     -fx-font-family: "Let's go Digital", sans-serif;
-    -fx-font-size: 64; /* bigger for emphasis */
+    -fx-font-size: 64;
     -fx-font-weight: bold;
-    -fx-text-fill: linear-gradient(to bottom, #ff4c4c, #ff0000); /* red gradient text */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 8, 0.5, 2, 2); /* shadow for depth */
-    -fx-background-color: rgba(0, 0, 0, 0.7); /* semi-transparent black background */
-    -fx-background-radius: 15; /* rounded corners */
-    -fx-padding: 20 40 20 40; /* space around text */
+    -fx-text-fill: linear-gradient(to bottom, #ff4c4c, #ff0000);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 8, 0.5, 2, 2);
+    -fx-background-color: rgba(0, 0, 0, 0.7);
+    -fx-background-radius: 15;
+    -fx-padding: 20 40 20 40;
     -fx-alignment: center;
 }
 
@@ -81,7 +73,7 @@
 }
 
 #gamePanel {
-    -fx-background-color: #1d1d1d;       /* dark grey / near black */
+    -fx-background-color: #1d1d1d;
     -fx-padding: 0;
     -fx-hgap: 0;
     -fx-vgap: 0;
@@ -90,7 +82,7 @@
 }
 
 .cell-style {
-    -fx-stroke: #333333;     /* subtle grid line */
+    -fx-stroke: #333333;
     -fx-stroke-width: 0.5;
 }
 .brick {

@@ -46,17 +46,17 @@
                 <VBox spacing="10" alignment="TOP_CENTER" style="-fx-padding: 20 0 0 0;">
                     <!-- "NEXT" label -->
                     <Label text="NEXT"
-                           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: cyan; -fx-effect: dropshadow(one-pass-box, black, 3, 0, 0, 0);"/>
+                           style="-fx-font-size: 16px; -fx-text-fill:  #E76D83; -fx-font-weight: bold;"/>
                     <!-- Next piece box -->
-                    <StackPane style="-fx-border-color: lightgray; -fx-border-width: 3; -fx-padding: 8; -fx-background-color: black;"
-                               prefWidth="100" prefHeight="300">
+                    <StackPane style="-fx-border-color: #E76D83; -fx-border-width: 3; -fx-padding: 8; -fx-background-color: black;"
+                               prefWidth="100" prefHeight="100">
                         <GridPane fx:id="nextPiecePanel" hgap="1" vgap="1" alignment="CENTER" minWidth="80" minHeight="80"/>
                     </StackPane>
 
                     <!-- LEVEL Box -->
                     <VBox alignment="CENTER">
-                        <Label text="LEVEL" style="-fx-font-size: 16px; -fx-text-fill: cyan; -fx-font-weight: bold;"/>
-                        <StackPane style="-fx-border-color: lightgray; -fx-border-width: 2; -fx-padding: 5; -fx-background-color: black;"
+                        <Label text="LEVEL" style="-fx-font-size: 16px; -fx-text-fill:  #E76D83; -fx-font-weight: bold;"/>
+                        <StackPane style="-fx-border-color:  #E76D83; -fx-border-width: 2; -fx-padding: 5; -fx-background-color: black;"
                                    prefWidth="100" prefHeight="35">
                             <Label fx:id="levelLabel" text="1" style="-fx-font-size: 16px; -fx-text-fill: white;"/>
                         </StackPane>
@@ -64,8 +64,8 @@
 
                     <!-- LINES Box -->
                     <VBox alignment="CENTER">
-                        <Label text="LINES" style="-fx-font-size: 16px; -fx-text-fill: cyan; -fx-font-weight: bold;"/>
-                        <StackPane style="-fx-border-color: lightgray; -fx-border-width: 2; -fx-padding: 5; -fx-background-color: black;"
+                        <Label text="LINES" style="-fx-font-size: 16px; -fx-text-fill:  #E76D83; -fx-font-weight: bold;"/>
+                        <StackPane style="-fx-border-color:  #E76D83; -fx-border-width: 2; -fx-padding: 5; -fx-background-color: black;"
                                    prefWidth="100" prefHeight="35">
                             <Label fx:id="linesLabel" text="0" style="-fx-font-size: 16px; -fx-text-fill: white;"/>
                         </StackPane>
@@ -73,8 +73,8 @@
 
                     <!-- SCORE Box -->
                     <VBox alignment="CENTER">
-                        <Label text="SCORE" style="-fx-font-size: 16px; -fx-text-fill: cyan; -fx-font-weight: bold;"/>
-                        <StackPane style="-fx-border-color: lightgray; -fx-border-width: 2; -fx-padding: 5; -fx-background-color: black;"
+                        <Label text="SCORE" style="-fx-font-size: 16px; -fx-text-fill:  #E76D83; -fx-font-weight: bold;"/>
+                        <StackPane style="-fx-border-color:  #E76D83; -fx-border-width: 2; -fx-padding: 5; -fx-background-color: black;"
                                    prefWidth="100" prefHeight="35">
                             <Label fx:id="scoreLabel" text="0" style="-fx-font-size: 16px; -fx-text-fill: white;" StackPane.alignment="CENTER"/>
                         </StackPane>
@@ -92,7 +92,7 @@
 
 
     <stylesheets>
-        <URL value="@../window_style.css"/>
+        <URL value="@../styles/window_style.css"/>
     </stylesheets>
 
 </StackPane>
