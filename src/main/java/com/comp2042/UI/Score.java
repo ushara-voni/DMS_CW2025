@@ -1,9 +1,9 @@
-package com.comp2042;
+package com.comp2042.UI;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public final class Score {
+public class Score {
 
     private final IntegerProperty score = new SimpleIntegerProperty(0);
 
@@ -11,11 +11,12 @@ public final class Score {
         return score;
     }
 
-    public void add(int i){
-        score.setValue(score.getValue() + i);
+    public void reset() {
+        score.set(0);
     }
 
-    public void reset() {
-        score.setValue(0);
-    }
+    public void add(int i){ score.setValue(score.getValue() + i); }
+
+    public int getScore() { return score.get(); }
+
 }

@@ -1,9 +1,8 @@
-package com.comp2042;
+package com.comp2042.Controllers;
 
+import com.comp2042.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
 public class MainMenuController {

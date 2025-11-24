@@ -1,9 +1,13 @@
-package com.comp2042;
+package com.comp2042.Inputs_Events;
+
+
+import com.comp2042.UI.ClearRow;
+import com.comp2042.UI.ViewData;
 
 public interface InputEventListener {
 
-    DownData onDownEvent(MoveEvent event);
-    DownData onHardDropEvent(MoveEvent event);
+    ViewData onDownEvent(MoveEvent event);
+    ViewData onHardDropEvent(MoveEvent event);
 
     ViewData onLeftEvent(MoveEvent event);
 
@@ -14,4 +18,5 @@ public interface InputEventListener {
     int[][] getBoardMatrix();
 
     void createNewGame();
+    ClearRow pollLastClearRow();
 }

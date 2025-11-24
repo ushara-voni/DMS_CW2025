@@ -1,5 +1,6 @@
-package com.comp2042;
+package com.comp2042.Controllers;
 
+import com.comp2042.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,6 +19,10 @@ public class GameOverController {
     @FXML
     private Button backMenuButton;
 
+    @FXML
+    private Button exitButton;
+
+
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
     }
@@ -34,5 +39,10 @@ public class GameOverController {
     @FXML
     private void handleBackToMenu(ActionEvent event) throws Exception {
         mainApp.showMainMenu();
+    }
+
+    @FXML
+    private void handleExit(ActionEvent event) {
+        System.exit(0);
     }
 }

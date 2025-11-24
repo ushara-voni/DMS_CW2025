@@ -1,5 +1,6 @@
-package com.comp2042;
+package com.comp2042.Controllers;
 
+import com.comp2042.Main;
 import javafx.fxml.FXML;
 
 public class InstructionsController {

@@ -4,31 +4,24 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.geometry.Pos?>
 
-<VBox fx:controller="com.comp2042.InstructionsController"
+<VBox fx:controller="com.comp2042.Controllers.InstructionsController"
       xmlns:fx="http://javafx.com/fxml"
       alignment="CENTER"
       spacing="15"
-      style="-fx-background-color: rgba(0,0,0,0.85); -fx-padding: 50;">
+      stylesheets="@/styles/instructions.css">
 
-    <Label text="HOW TO PLAY"
-           style="-fx-font-size: 32px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+    <Label text="HOW TO PLAY" styleClass="label-title"/>
 
-    <Label text="← / A : Move Left"
-           style="-fx-font-size: 18px; -fx-text-fill: white;"/>
-    <Label text="→ / D : Move Right"
-           style="-fx-font-size: 18px; -fx-text-fill: white;"/>
-    <Label text="↑ / W : Rotate"
-           style="-fx-font-size: 18px; -fx-text-fill: white;"/>
-    <Label text="↓ / S : Drop Faster"
-           style="-fx-font-size: 18px; -fx-text-fill: white;"/>
-    <Label text="P : Pause/Resume"
-           style="-fx-font-size: 18px; -fx-text-fill: white;"/>
-    <Label text="N : New Game"
-           style="-fx-font-size: 18px; -fx-text-fill: white;"/>
+    <Label text="← / A : Move Left" styleClass="label-instruction"/>
+    <Label text="→ / D : Move Right" styleClass="label-instruction"/>
+    <Label text="↑ / W : Rotate" styleClass="label-instruction"/>
+    <Label text="↓ / S : Drop Faster" styleClass="label-instruction"/>
+    <Label text="Space : Hard Drop" styleClass="label-instruction"/>
+    <Label text="P : Pause/Resume" styleClass="label-instruction"/>
+    <Label text="N : New Game" styleClass="label-instruction"/>
+
 
     <Button text="Back to Menu"
             onAction="#handleBackToMenu"
-            prefWidth="200"
-            style="-fx-font-size: 16px;"/>
-
+            prefWidth="200"/>
 </VBox>

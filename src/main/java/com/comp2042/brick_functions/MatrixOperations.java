@@ -1,4 +1,6 @@
-package com.comp2042;
+package com.comp2042.brick_functions;
+
+import com.comp2042.UI.ClearRow;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

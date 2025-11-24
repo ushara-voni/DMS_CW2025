@@ -1,5 +1,9 @@
 package com.comp2042;
 
+import com.comp2042.Controllers.GameOverController;
+import com.comp2042.Controllers.GuiController;
+import com.comp2042.Controllers.InstructionsController;
+import com.comp2042.Controllers.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
