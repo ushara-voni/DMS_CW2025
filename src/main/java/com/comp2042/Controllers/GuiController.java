@@ -40,6 +40,8 @@ public class GuiController implements Initializable {
     @FXML private Label linesLabel;
 
     @FXML private Button pauseButton;
+    @FXML private GridPane holdPiecePanel;
+
 
     // Core collaborators
     private RendererManager rendererManager;
@@ -75,7 +77,8 @@ public class GuiController implements Initializable {
 
         stopGameLoop();
 
-        rendererManager = new RendererManager(gamePanel, brickPanel, nextPiecePanel, BRICK_SIZE);
+        rendererManager = new RendererManager(gamePanel, brickPanel, nextPiecePanel, holdPiecePanel, BRICK_SIZE);
+
         rendererManager.initBoard(boardMatrix);
         rendererManager.initFallingBrick(brick);
 
@@ -95,7 +98,8 @@ public class GuiController implements Initializable {
                 eventListener,
                 this::refreshBrick,
                 e -> onMove(eventListener::onDownEvent, e),
-                e -> onMove(eventListener::onHardDropEvent, e)
+                e -> onMove(eventListener::onHardDropEvent, e),
+                e -> onMove(eventListener::onHoldEvent, e)
         );
 
         gamePanel.setOnKeyPressed(inputHandler.getKeyHandler());
@@ -129,6 +133,7 @@ public class GuiController implements Initializable {
 
         rendererManager.renderFalling(brick);
         rendererManager.renderGhost(brick, eventListener.getBoardMatrix());
+        rendererManager.renderHoldPiece(eventListener.getHeldBrickMatrix());
     }
 
     /** BACKGROUND UPDATE */

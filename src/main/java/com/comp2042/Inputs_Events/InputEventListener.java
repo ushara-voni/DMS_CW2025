@@ -19,4 +19,6 @@ public interface InputEventListener {
 
     void createNewGame();
     ClearRow pollLastClearRow();
+    ViewData onHoldEvent(MoveEvent event);
+    int[][] getHeldBrickMatrix();
 }

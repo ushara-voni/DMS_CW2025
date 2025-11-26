@@ -12,6 +12,8 @@ public class BrickManager {
     private final BrickRotator brickRotator;
     private final BoardGrid boardGrid;
     private Point currentOffset;
+    private Brick heldBrick=null;
+    private boolean holdUsedThisTurn= false;
 
     public BrickManager(BoardGrid boardGrid) {
         this.boardGrid = boardGrid;
@@ -23,6 +25,8 @@ public class BrickManager {
     public boolean spawnNewBrick() {
         Brick brick = brickGenerator.getBrick();
         brickRotator.setBrick(brick);
+        holdUsedThisTurn = false; // allow hold again for new brick
+
 
         // Center horizontally
 
@@ -83,4 +87,32 @@ public class BrickManager {
         Point offset = getCurrentOffset();
         return new ViewData(getCurrentShape(), offset.x, offset.y, getNextShapePreview());
     }
+
+    public ViewData holdPiece() {
+        if (holdUsedThisTurn) return null; // cannot hold twice per drop
+
+        Brick current = brickRotator.getBrick();
+        Brick temp = heldBrick;
+
+        heldBrick = current;      // store current piece
+        holdUsedThisTurn = true;  // prevent double hold
+
+        if (temp == null) {
+            // No previous hold → spawn a new brick
+            spawnNewBrick();
+        } else {
+            // Swap the bricks
+            brickRotator.setBrick(temp);
+            currentOffset = new Point(0, 1);
+        }
+
+        return getViewData();
+    }
+
+    public int[][] getHeldBrickMatrix() {
+        if (heldBrick == null) return null;
+        return heldBrick.getShapeMatrix().get(0);
+    }
+
+
 }

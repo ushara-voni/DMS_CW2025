@@ -13,15 +13,19 @@ public class InputHandler {
     private final Consumer<ViewData> refreshCallback;
     private final Consumer<MoveEvent> moveDownCallback;
     private final Consumer<MoveEvent> hardDropCallback;
+    private final Consumer<MoveEvent> holdCallback;
 
     public InputHandler(InputEventListener listener,
                         Consumer<ViewData> refreshCallback,
                         Consumer<MoveEvent> moveDownCallback,
-                        Consumer<MoveEvent> hardDropCallback) {
+                        Consumer<MoveEvent> hardDropCallback,
+                        Consumer<MoveEvent> holdCallback) {
         this.listener = listener;
         this.refreshCallback = refreshCallback;
         this.moveDownCallback = moveDownCallback;
         this.hardDropCallback = hardDropCallback;
+        this.holdCallback = holdCallback;
+
     }
 
     public EventHandler<KeyEvent> getKeyHandler() {
@@ -56,6 +60,12 @@ public class InputHandler {
                     hardDropCallback.accept(dropEvent);
                     keyEvent.consume();
                 }
+                case C, SHIFT -> {
+                    MoveEvent holdEvent = new MoveEvent(EventType.HOLD, EventSource.USER);
+                    holdCallback.accept(holdEvent);   // <-- note: use Consumer<MoveEvent>
+                    keyEvent.consume();
+                }
+
                 case N -> listener.createNewGame();
             }
         };

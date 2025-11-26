@@ -10,17 +10,21 @@ public class RendererManager {
     private final FallingBrickRenderer fallingRenderer;
     private final GhostBrickRenderer ghostRenderer;
     private final NextPieceRenderer nextPieceRenderer;
+    private final HoldPieceRenderer holdPieceRenderer;
+
 
     public RendererManager(
             GridPane boardPanel,
             GridPane brickPanel,
             GridPane nextPiecePanel,
+            GridPane holdPiecePanel,
             int brickSize
     ) {
         this.boardRenderer = new BoardRenderer(boardPanel, brickSize);
         this.fallingRenderer = new FallingBrickRenderer(brickPanel, brickSize);
         this.ghostRenderer = new GhostBrickRenderer(boardPanel, brickSize);
         this.nextPieceRenderer = new NextPieceRenderer(nextPiecePanel);
+        this.holdPieceRenderer= new HoldPieceRenderer(holdPiecePanel);
     }
 
     // ---- Initialization ------------------------------------------------------
@@ -53,5 +57,9 @@ public class RendererManager {
     public void renderNextPiece(ViewData next) {
         nextPieceRenderer.renderNextPiece(next.getNextBrickData());
     }
+    public void renderHoldPiece(int[][] heldShape) {
+        holdPieceRenderer.renderHoldPiece(heldShape);
+    }
+
 
 }

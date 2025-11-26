@@ -38,4 +38,15 @@ public class TetrisBoard implements Board {
         gameScore.reset();
         brickManager.spawnNewBrick();
     }
+
+    @Override
+    public ViewData holdBrick() {
+        return brickManager.holdPiece();
+    }
+
+    @Override
+    public int[][] getHeldBrickMatrix() {
+        return brickManager.getHeldBrickMatrix();
+    }
+
 }

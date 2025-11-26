@@ -147,4 +147,17 @@ public class GameController implements InputEventListener {
     public int[][] getBoardMatrix() {
         return board.getBoardMatrix();
     }
+
+    @Override
+    public ViewData onHoldEvent(MoveEvent event) {
+        return board.holdBrick();
+    }
+
+    @Override
+    public int[][] getHeldBrickMatrix() {
+        return board.getHeldBrickMatrix();
+    }
+
+
+
 }

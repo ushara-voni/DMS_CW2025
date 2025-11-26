@@ -51,4 +51,9 @@ public class BrickRotator {
         return brick.getShapeMatrix().size();
     }
 
+    public Brick getBrick() {
+        return brick;
+    }
+
+
 }
