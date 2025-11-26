@@ -1,7 +1,8 @@
 package com.comp2042.Controllers;
 
 import com.comp2042.*;
-import com.comp2042.HighScoreManager;
+import com.comp2042.Audio.MusicManager;
+import com.comp2042.UI.HighScoreManager;
 import com.comp2042.Inputs_Events.*;
 import com.comp2042.Renderers.RendererManager;
 import com.comp2042.UI.ClearRow;
@@ -123,6 +124,7 @@ public class GuiController implements Initializable {
     private void showRowClear() {
         ClearRow row = eventListener.pollLastClearRow();
         if (row != null && row.getLinesRemoved() > 0) {
+            MusicManager.playSFX("bonus.mp3");
             notificationManager.showScoreNotification(row.getScoreBonus());
         }
     }
@@ -146,6 +148,7 @@ public class GuiController implements Initializable {
     /** BUTTON ACTIONS **/
     @FXML
     private void restartGame() {
+        MusicManager.playSFX("button.mp3");
         stopGameLoop();
         eventListener.createNewGame();
         pauseManager.setPaused(false);
@@ -155,6 +158,7 @@ public class GuiController implements Initializable {
 
     @FXML
     private void handleStartMenu() {
+        MusicManager.playSFX("button.mp3");
         stopGameLoop();
 
         try {
@@ -166,6 +170,7 @@ public class GuiController implements Initializable {
 
     @FXML
     private void pauseGame() {
+        MusicManager.playSFX("button.mp3");
         pauseManager.togglePause(pauseButton);
 
         if (pauseManager.isPaused()) gameLoop.pause();

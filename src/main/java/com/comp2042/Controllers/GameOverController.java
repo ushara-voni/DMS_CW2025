@@ -1,6 +1,7 @@
 package com.comp2042.Controllers;
 
-import com.comp2042.HighScoreManager;
+import com.comp2042.Audio.MusicManager;
+import com.comp2042.UI.HighScoreManager;
 import com.comp2042.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -47,16 +48,19 @@ public class GameOverController {
     }
     @FXML
     private void handleRestart(ActionEvent event) throws Exception {
+        MusicManager.playSFX("button.mp3");
         mainApp.showGameScreen();
     }
 
     @FXML
     private void handleBackToMenu(ActionEvent event) throws Exception {
+        MusicManager.playSFX("button.mp3");
         mainApp.showMainMenu();
     }
 
     @FXML
     private void handleExit(ActionEvent event) {
+        MusicManager.playSFX("button.mp3");
         System.exit(0);
     }
 }

@@ -1,5 +1,6 @@
 package com.comp2042.Controllers;
 
+import com.comp2042.Audio.MusicManager;
 import com.comp2042.Inputs_Events.InputEventListener;
 import com.comp2042.Inputs_Events.MoveEvent;
 import com.comp2042.UI.Board;
@@ -22,6 +23,7 @@ public class GameController implements InputEventListener {
 
     public GameController(GuiController gui) {
         viewGuiController = gui;
+        MusicManager.playBGM("gameplay.mp3");
 
         // initial game setup
         board.createNewBrick();
@@ -49,6 +51,8 @@ public class GameController implements InputEventListener {
         refreshView();
 
         if (gameOver) {
+
+            MusicManager.playBGM("game_over.mp3");
             // Ask GUI to stop its loop + show game over screen
             viewGuiController.gameOver();
         }
@@ -114,6 +118,7 @@ public class GameController implements InputEventListener {
 
     @Override
     public void createNewGame() {
+        MusicManager.playBGM("gameplay.mp3");
         board.newGame();
         linesCleared.set(0);
         level.set(1);

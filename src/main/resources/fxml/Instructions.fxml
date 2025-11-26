@@ -18,6 +18,7 @@
     <Label text="↓ / S : Drop Faster" styleClass="label-instruction"/>
     <Label text="Space : Hard Drop" styleClass="label-instruction"/>
     <Label text="P : Pause/Resume" styleClass="label-instruction"/>
+    <Label text="Shift / C : Hold Brick" styleClass="label-instruction"/>
     <Label text="N : New Game" styleClass="label-instruction"/>
 
 

@@ -1,5 +1,6 @@
 package com.comp2042.Controllers;
 
+import com.comp2042.Audio.MusicManager;
 import com.comp2042.Main;
 import javafx.fxml.FXML;
 
@@ -17,6 +18,7 @@ public class InstructionsController {
     private void handleBackToMenu() {
         try {
             if (mainApp != null) {
+                MusicManager.playSFX("button.mp3");
                 mainApp.showMainMenu();
             }
         } catch (Exception e) {

@@ -12,6 +12,7 @@ public class NotificationManager {
 
     /** Show a score notification (e.g., "+100") */
     public void showScoreNotification(int score) {
+
         NotificationPanel panel = new NotificationPanel("+" + score);
         notificationGroup.getChildren().add(panel);
         panel.showScore(notificationGroup.getChildren());
