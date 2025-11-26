@@ -108,6 +108,13 @@
                             <Label fx:id="scoreLabel" text="0" style="-fx-font-size: 16px; -fx-text-fill: white;" StackPane.alignment="CENTER"/>
                         </StackPane>
                     </VBox>
+                    <VBox alignment="CENTER">
+                        <Label text="HIGH-SCORE" style="-fx-font-size: 16px; -fx-text-fill:  #E76D83; -fx-font-weight: bold;"/>
+                        <StackPane style="-fx-border-color:  #E76D83; -fx-border-width: 2; -fx-padding: 5; -fx-background-color: black;"
+                                   prefWidth="100" prefHeight="35">
+                            <Label fx:id="highscoreLabel" text="0" style="-fx-font-size: 16px; -fx-text-fill: white;" StackPane.alignment="CENTER"/>
+                        </StackPane>
+                    </VBox>
                 </VBox>
             </HBox>
 

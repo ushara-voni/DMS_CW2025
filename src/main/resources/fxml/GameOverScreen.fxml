@@ -13,6 +13,7 @@
 
     <Label text="GAME OVER" styleClass="label-title"/>
     <Label fx:id="finalScoreLabel" text="Score: 0" styleClass="scoreClass"/>
+    <Label fx:id="highScoreLabel" text="Score: 0" styleClass="scoreClass"/>
 
     <Button fx:id="restartButton" text="Restart" onAction="#handleRestart" styleClass="menu-button" prefWidth="200"/>
     <Button fx:id="backMenuButton" text="Back to Menu" onAction="#handleBackToMenu" styleClass="menu-button" prefWidth="200"/>

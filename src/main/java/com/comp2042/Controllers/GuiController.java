@@ -1,6 +1,7 @@
 package com.comp2042.Controllers;
 
 import com.comp2042.*;
+import com.comp2042.HighScoreManager;
 import com.comp2042.Inputs_Events.*;
 import com.comp2042.Renderers.RendererManager;
 import com.comp2042.UI.ClearRow;
@@ -36,6 +37,7 @@ public class GuiController implements Initializable {
     @FXML private Group groupNotification;
 
     @FXML private Label scoreLabel;
+    @FXML private Label highscoreLabel;
     @FXML private Label levelLabel;
     @FXML private Label linesLabel;
 
@@ -85,7 +87,7 @@ public class GuiController implements Initializable {
         notificationManager = new NotificationManager(groupNotification);
 
         BrickPositioner.update(brickPanel, gamePanel, brick, BRICK_SIZE, BRICK_Y_OFFSET);
-
+        highscoreLabel.setText(String.valueOf(HighScoreManager.loadHighScore()));
         gameLoop = new GameLoop(INITIAL_DROP_DELAY, e -> onMove(eventListener::onDownEvent, e));
         gameLoop.start();
     }
@@ -204,16 +206,31 @@ public class GuiController implements Initializable {
 
         try {
             int score = Integer.parseInt(scoreLabel.getText());
+
+            // SAVE HIGHSCORE
+            HighScoreManager.saveHighScore(score);
+
             mainApp.showGameOverScreen(score);
+
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Failed to load Game Over screen.").showAndWait();
         }
     }
 
+
     /** BINDINGS **/
     public void bindScore(IntegerProperty score) {
         scoreLabel.textProperty().bind(score.asString("%d"));
+
+        // LIVE high score update
+        score.addListener((obs, oldVal, newVal) -> {
+            int hs = HighScoreManager.loadHighScore();
+            if (newVal.intValue() > hs) {
+                highscoreLabel.setText(newVal.toString());
+            }
+        });
     }
+
 
     public void bindLines(IntegerProperty lines) {
         linesLabel.textProperty().bind(lines.asString("%d"));

@@ -1,5 +1,6 @@
 package com.comp2042.Controllers;
 
+import com.comp2042.HighScoreManager;
 import com.comp2042.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -22,15 +23,28 @@ public class GameOverController {
     @FXML
     private Button exitButton;
 
+    @FXML private Label highScoreLabel;
+
+    private int finalScore;
+
 
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
     }
 
     public void setFinalScore(int score) {
-        finalScoreLabel.setText("Score: " + score);
-    }
+        this.finalScore = score;
 
+        // Show final score on the label
+        finalScoreLabel.setText("Score: " + score);
+
+        // Save high score if this is a new one
+        HighScoreManager.saveHighScore(score);
+
+        // Load high score and display
+        int highScore = HighScoreManager.loadHighScore();
+        highScoreLabel.setText("High Score: " + highScore);
+    }
     @FXML
     private void handleRestart(ActionEvent event) throws Exception {
         mainApp.showGameScreen();
