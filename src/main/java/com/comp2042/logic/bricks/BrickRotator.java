@@ -1,7 +1,6 @@
-package com.comp2042.brick_functions;
+package com.comp2042.logic.bricks;
 
 import com.comp2042.UI.ViewData;
-import com.comp2042.logic.bricks.Brick;
 
 public class BrickRotator {
 

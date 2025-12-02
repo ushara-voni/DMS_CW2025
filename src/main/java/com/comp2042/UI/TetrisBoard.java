@@ -1,5 +1,7 @@
 package com.comp2042.UI;
 
+import com.comp2042.logic.bricks.BrickManager;
+
 public class TetrisBoard implements Board {
 
     private final BoardGrid boardGrid;

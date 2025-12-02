@@ -5,8 +5,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Stores the predefined 2D shape matrices for all {@link TetrominoType} bricks.
+ *
+ *
+ * Each tetromino type is associated with a list of rotation states. Each rotation
+ * state is represented as a 2D integer array where:
+ *
+ * <ul>
+ *   <li>0 indicates an empty cell</li>
+ *   <li>1–7 indicate filled cells corresponding to the tetromino type</li>
+ * </ul>
+ *
+ *
+ * This class is used by {@link TetrominoBrick} to retrieve the shape matrices
+ * for rendering and rotation logic in the game.
+ *
+ */
 public class BrickShapes {
-
+    /**
+     * A map linking each {@link TetrominoType} to its list of rotation matrices.
+     *
+     * The list contains one or more 4x4 matrices, each representing a rotation
+     * state of the tetromino.
+     *
+     */
     public static final Map<TetrominoType, List<int[][]>> SHAPES = new HashMap<>();
 
     static {

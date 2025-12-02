@@ -14,7 +14,7 @@ public interface InputEventListener {
     ViewData onRightEvent(MoveEvent event);
 
     ViewData onRotateEvent(MoveEvent event);
-    // in InputEventListener (or your GameController)
+
     int[][] getBoardMatrix();
 
     void createNewGame();

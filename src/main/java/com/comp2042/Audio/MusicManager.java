@@ -7,7 +7,7 @@ public class MusicManager {
 
     private static MediaPlayer bgmPlayer;
 
-    // ===== BACKGROUND MUSIC =====
+    // BACKGROUND MUSIC
     public static void playBGM(String fileName) {
         // Stop current track if any
         if (bgmPlayer != null) {
@@ -40,7 +40,7 @@ public class MusicManager {
         }
     }
 
-    // ===== SOUND EFFECTS =====
+    //  SOUND EFFECTS
     public static void playSFX(String fileName) {
         String path = MusicManager.class.getResource("/audio/" + fileName).toExternalForm();
         Media media = new Media(path);

@@ -1,4 +1,4 @@
-package com.comp2042.brick_functions;
+package com.comp2042.logic.bricks;
 
 import com.comp2042.UI.ClearRow;
 

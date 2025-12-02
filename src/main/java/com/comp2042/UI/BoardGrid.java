@@ -1,6 +1,6 @@
 package com.comp2042.UI;
 
-import com.comp2042.brick_functions.MatrixOperations;
+import com.comp2042.logic.bricks.MatrixOperations;
 
 public class BoardGrid {
 

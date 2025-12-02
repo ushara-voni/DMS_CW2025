@@ -11,7 +11,7 @@
     -fx-font-size: 90px;
     -fx-text-fill: #E76D83;
     -fx-font-weight: bold;
-    -fx-effect: dropshadow(three-pass-box, #FF69B4, 6, 0, 0, 0); /* stronger glow */
+    -fx-effect: dropshadow(three-pass-box, #FF69B4, 6, 0, 0, 0);
 }
 
 

@@ -2,12 +2,9 @@ package com.comp2042.Controllers;
 
 import com.comp2042.*;
 import com.comp2042.Audio.MusicManager;
-import com.comp2042.UI.HighScoreManager;
+import com.comp2042.UI.*;
 import com.comp2042.Inputs_Events.*;
 import com.comp2042.Renderers.RendererManager;
-import com.comp2042.UI.ClearRow;
-import com.comp2042.UI.NotificationManager;
-import com.comp2042.UI.ViewData;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.fxml.FXML;

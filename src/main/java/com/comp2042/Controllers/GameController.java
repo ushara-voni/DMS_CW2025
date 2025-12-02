@@ -51,7 +51,7 @@ public class GameController implements InputEventListener {
         refreshView();
 
         if (gameOver) {
-
+            MusicManager.playSFX("game-over-sfx.mp3");
             MusicManager.playBGM("game_over.mp3");
             // Ask GUI to stop its loop + show game over screen
             viewGuiController.gameOver();
