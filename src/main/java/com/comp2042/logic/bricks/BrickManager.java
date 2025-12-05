@@ -1,178 +1,102 @@
 package com.comp2042.logic.bricks;
 
-import com.comp2042.UI.BoardGrid;
-import com.comp2042.UI.ViewData;
+import com.comp2042.logic.core.BoardGrid;
+import com.comp2042.logic.core.ViewData;
 
 import java.awt.*;
+
 /**
- * Manages the lifecycle, movement, rotation, holding, and view data of
- * tetromino bricks within the game.
- *
- * This class coordinates the following responsibilities:
- * <ul>
- *     <li>Fetching new bricks from a {@link BrickGenerator}</li>
- *     <li>Handling movement and rotation through {@link BrickRotator}</li>
- *     <li>Checking collisions using {@link MatrixOperations}</li>
- *     <li>Merging bricks into the main board through {@link BoardGrid}</li>
- *     <li>Providing preview and hold piece information to the UI</li>
- * </ul>
+ * Manages the lifecycle, movement, rotation, and holding of Tetris bricks.
+ * <p>
+ * The {@code BrickManager} tracks the current falling brick, the next brick,
+ * and the optionally held brick. It also performs collision checks, movement,
+ * and integrates bricks into the {@link BoardGrid} once they can no longer move.
+ * </p>
  */
 public class BrickManager {
-    /** Generates the current and next bricks */
-    private final BrickGenerator brickGenerator;
 
-    /** Handles shape rotation logic */
-    private final BrickRotator brickRotator;
-
-
-    /** Reference to the board used to check collisions and merge bricks */
+    /** The game board grid used for collision checks and merging bricks. */
     private final BoardGrid boardGrid;
 
-    /** Current X/Y board position of the falling brick */
+    /** The currently active falling brick. */
+    private Brick current;
+    /** The next brick to be spawned after the current one locks. */
+    private Brick next;
+
+    /** The brick stored using the hold mechanic (may be null). */
+    private Brick heldBrick = null;
+    /** Tracks whether hold has been used during the current turn. */
+    private boolean holdUsedThisTurn = false;
+
+    /** The position (x, y) of the current brick on the board grid. */
     private Point currentOffset;
 
-
-    /** Stored held brick (if any) */
-    private Brick heldBrick=null;
-
-    /** Ensures hold can only be used once per brick drop */
-    private boolean holdUsedThisTurn= false;
-
     /**
-     * Creates a new {@code BrickManager} attached to the specified board grid.
+     * Creates a new {@code BrickManager} for the given board grid.
+     * <p>
+     * Initializes the current and next bricks randomly and positions
+     * the current brick at its initial spawn offset.
+     * </p>
      *
-     * @param boardGrid the board logic handler
+     * @param boardGrid the board on which bricks are placed and merged
      */
     public BrickManager(BoardGrid boardGrid) {
         this.boardGrid = boardGrid;
-        this.brickGenerator = new FactoryBrickGenerator();
-        this.brickRotator = new BrickRotator();
-    }
 
-    /**
-     * Spawns a new brick at the top of the board.
-     *
-     * @return {@code true} if the spawn position is valid, {@code false} if a collision occurs (game over state)
-     */
-    public boolean spawnNewBrick() {
-        Brick brick = brickGenerator.getBrick();
-        brickRotator.setBrick(brick);
-        holdUsedThisTurn = false; // allow hold again for new brick
-
-
-        // Center horizontally
+        // INITIAL SEQUENCE
+        current = BrickFactory.createRandomBrick();
+        next = BrickFactory.createRandomBrick();
 
         currentOffset = new Point(0, 1);
-
-        // Check collision at start
-        return !MatrixOperations.intersect(boardGrid.getMatrixCopy(),
-                brickRotator.getCurrentShape(), currentOffset.x, currentOffset.y);
     }
 
 
     /**
-     * Attempts to move the current brick by the given X/Y delta.
+     * Spawns the next brick, generates a new upcoming brick,
+     * resets rotation, and resets the "hold used" flag.
      *
-     * @param dx change in horizontal movement (-1 left, +1 right)
-     * @param dy change in vertical movement (+1 down)
-     * @return {@code true} if the movement succeeds, {@code false} if blocked by board or other blocks
+     * @return {@code true} if spawning is possible (no collision),
+     *         {@code false} if the new brick immediately collides (game over)
      */
-    public boolean move(int dx, int dy) {
-        if (currentOffset == null) return false;
-        Point newPos = new Point(currentOffset);
-        newPos.translate(dx, dy);
+    public boolean spawnNewBrick() {
+        current = next;
+        next = BrickFactory.createRandomBrick();
 
-        if (MatrixOperations.intersect(boardGrid.getMatrixCopy(),
-                brickRotator.getCurrentShape(), newPos.x, newPos.y))
-            return false;
+        holdUsedThisTurn = false;
+        current.resetRotation();
+        currentOffset = new Point(0, 1);
 
-        currentOffset = newPos;
-        return true;
+        return !MatrixOperations.intersect(
+                boardGrid.getMatrixCopy(),
+                current.getShape(),
+                currentOffset.x,
+                currentOffset.y
+        );
     }
 
-    /** @return true if moved downward successfully */
-    public boolean moveDown() { return move(0, 1); }
-
-    /** @return true if moved left successfully */
-    public boolean moveLeft() { return move(-1, 0); }
-    /** @return true if moved right successfully */
-    public boolean moveRight() { return move(1, 0); }
-
-
     /**
-     * Attempts to rotate the brick to its next rotation state.
+     * Activates the hold mechanic. If a brick is already held,
+     * it swaps with the current brick. Otherwise, the current brick is held
+     * and a new brick is spawned.
+     * <p>
+     * This method cannot be used more than once per brick drop.
+     * </p>
      *
-     * @return {@code true} if the rotation succeeds, {@code false} if blocked by collision
+     * @return the updated {@link ViewData} after the hold action
      */
-    public boolean rotateLeft() {
-        // Get the next shape matrix directly
-        int[][] rotated = brickRotator.getNextShape();
 
-        // Check collision
-        if (MatrixOperations.intersect(boardGrid.getMatrixCopy(),
-                rotated, currentOffset.x, currentOffset.y))
-            return false;
-
-        // Update the current shape index
-        int nextIndex = (brickRotator.getCurrentShapeIndex() + 1) % brickRotator.getShapeCount();
-        brickRotator.setCurrentShape(nextIndex);
-
-        return true;
-    }
-
-
-    /**
-     * Merges the current falling brick permanently into the board matrix.
-     */
-    public void mergeToBoard() {
-        boardGrid.merge(brickRotator.getCurrentShape(), currentOffset.x, currentOffset.y);
-    }
-
-    /** @return a defensive copy of the brick’s current offset on the board */
-    public Point getCurrentOffset() { return new Point(currentOffset); }
-    /** @return the current shape matrix of the falling brick */
-    public int[][] getCurrentShape() { return brickRotator.getCurrentShape(); }
-    /**
-     * @return the shape matrix of the next brick (rotation 0)
-     */
-    public int[][] getNextShapePreview() { return brickGenerator.getNextBrick().getShapeMatrix().get(0); }
-
-    /**
-     * Packages current brick, next brick, and position data for the UI.
-     *
-     * @return a {@link ViewData} instance used for rendering
-     */
-    public ViewData getViewData() {
-        Point offset = getCurrentOffset();
-        return new ViewData(getCurrentShape(), offset.x, offset.y, getNextShapePreview());
-    }
-    /**
-     * Activates the hold piece system.
-     *
-     * Rules:
-     * <ul>
-     *     <li>Can only hold once per falling brick</li>
-     *     <li>First time holding stores the brick and spawns a new one</li>
-     *     <li>Subsequent holds swap the current and held bricks</li>
-     * </ul>
-     *
-     * @return updated {@link ViewData}, or {@code null} if hold was already used this turn
-     */
     public ViewData holdPiece() {
-        if (holdUsedThisTurn) return null; // cannot hold twice per drop
+        if (holdUsedThisTurn) return getViewData();
 
-        Brick current = brickRotator.getBrick();
         Brick temp = heldBrick;
-
-        heldBrick = current;      // store current piece
-        holdUsedThisTurn = true;  // prevent double hold
+        heldBrick = current;
+        holdUsedThisTurn = true;
 
         if (temp == null) {
-            // No previous hold → spawn a new brick
             spawnNewBrick();
         } else {
-            // Swap the bricks
-            brickRotator.setBrick(temp);
+            current = temp;
+            current.resetRotation();
             currentOffset = new Point(0, 1);
         }
 
@@ -180,14 +104,100 @@ public class BrickManager {
     }
 
     /**
-     * Returns the matrix for the held brick (rotation index 0).
+     * Returns the matrix representation of the held brick for preview UI.
      *
-     * @return 2D int matrix of the held piece, or {@code null} if no piece is held
+     * @return a 2D array for the held piece, or {@code null} if no brick is held
      */
     public int[][] getHeldBrickMatrix() {
         if (heldBrick == null) return null;
-        return heldBrick.getShapeMatrix().get(0);
+        return heldBrick.getShapeMatrix();
+    }
+
+    /**
+     * Resets the hold system by clearing the held brick
+     * and re-enabling hold usage.
+     */
+    public void resetHold() {
+        heldBrick = null;
+        holdUsedThisTurn = false;
+    }
+
+    /**
+     * Returns the matrix representation of the next brick for preview UI.
+     *
+     * @return a 2D array representing the next piece
+     */
+    public int[][] getNextShapePreview() {
+        return next.getShapeMatrix();
     }
 
 
+    /**
+     * Packages the current game state into {@link ViewData} for rendering.
+     * Includes the current brick matrix, its position,
+     * and a preview of the next brick.
+     *
+     * @return a new {@code ViewData} object
+     */
+    public ViewData getViewData() {
+        return new ViewData(
+                current.getShape(),
+                currentOffset.x,
+                currentOffset.y,
+                getNextShapePreview()
+        );
+    }
+    /**
+     * Returns the current brick's offset on the board.
+     * A defensive copy is returned to preserve immutability.
+     *
+     * @return a copy of the current brick offset
+     */
+    public Point getCurrentOffset() {
+        return new Point(currentOffset);
+    }
+
+    public boolean moveDown() { return move(0, 1); }
+    public boolean moveLeft() { return move(-1, 0); }
+    public boolean moveRight() { return move(1, 0); }
+    /**
+     * Attempts to move the current brick by the specified offset.
+     * Performs collision detection before applying the movement.
+     *
+     * @param dx movement along the x-axis
+     * @param dy movement along the y-axis
+     * @return {@code true} if movement was successful, {@code false} if blocked
+     */
+    public boolean move(int dx, int dy) {
+        if (currentOffset == null) return false;
+        Point newPos = new Point(currentOffset);
+        newPos.translate(dx, dy);
+        if (MatrixOperations.intersect( boardGrid.getMatrixCopy(), current.getShape(), newPos.x, newPos.y )) return false;
+        currentOffset = newPos; return true; }
+
+    /**
+     * Attempts to rotate the current brick clockwise.
+     * If rotation results in a collision, it is reverted.
+     *
+     * @return {@code true} if rotation succeeded, {@code false} otherwise
+     */
+    public boolean rotate() {
+        current.rotate();
+        if (MatrixOperations.intersect( boardGrid.getMatrixCopy(), current.getShape(), currentOffset.x, currentOffset.y ))
+        {
+            current.rotate();
+            current.rotate();
+            current.rotate();
+            return false; }
+        return true; }
+
+    /**
+     * Merges the current brick's blocks permanently into the board grid.
+     * This should be called when the brick can no longer move downward.
+     */
+    public void mergeToBoard() {
+        boardGrid.merge( current.getShape(), currentOffset.x, currentOffset.y );
+    }
+
 }
+

@@ -14,8 +14,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+/**
+ * Represents a pop-up notification panel for Tetris gameplay.
+ * Can display score bonuses or level-up messages with animations.
+ */
 public class NotificationPanel extends BorderPane {
 
+    /**
+     * Constructs a notification panel with the specified text.
+     * Applies default styling and glow effect.
+     *
+     * @param text the text to display on the panel (e.g., "+100" or "LEVEL 2")
+     */
     public NotificationPanel(String text) {
         setMinHeight(200);
         setMinWidth(220);
@@ -28,6 +38,12 @@ public class NotificationPanel extends BorderPane {
 
     }
 
+    /**
+     * Shows a score notification with fade and upward translation animations.
+     * Removes the panel from the provided node list after the animation completes.
+     *
+     * @param list the list of nodes (typically the notification group) to which this panel belongs
+     */
     public void showScore(ObservableList<Node> list) {
         FadeTransition ft = new FadeTransition(Duration.millis(2000), this);
         TranslateTransition tt = new TranslateTransition(Duration.millis(2500), this);
@@ -45,6 +61,12 @@ public class NotificationPanel extends BorderPane {
         transition.play();
     }
 
+    /**
+     * Shows a level-up notification with specialized styling and animations.
+     * Centers the notification and removes it from the node list after animation.
+     *
+     * @param list the list of nodes (typically the notification group) to which this panel belongs
+     */
     public void showLevel(ObservableList<Node> list) {
         // Apply special styling for LEVEL
         Label label = (Label) getCenter();

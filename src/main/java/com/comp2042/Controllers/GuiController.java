@@ -1,10 +1,11 @@
 package com.comp2042.Controllers;
 
 import com.comp2042.*;
-import com.comp2042.Audio.MusicManager;
+import com.comp2042.Infrastructure.Audio.MusicManager;
+import com.comp2042.Infrastructure.HighScoreManager;
 import com.comp2042.UI.*;
 import com.comp2042.Inputs_Events.*;
-import com.comp2042.Renderers.RendererManager;
+import com.comp2042.UI.Renderers.RendererManager;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.fxml.FXML;
@@ -17,11 +18,21 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
+import com.comp2042.logic.core.ClearRow;
+import com.comp2042.logic.core.ViewData;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
+/**
+ * Controller responsible for all GUI operations of the Tetris game.
+ * Manages rendering of the board, falling bricks, next/held pieces,
+ * scoreboard, level updates, notifications, input handling,
+ * game loop timing, pause system, and scene navigation.
+ * The GuiController acts as the bridge between the GameController
+ * (game logic) and JavaFX UI components.
+ */
 public class GuiController implements Initializable {
 
     private static final int BRICK_SIZE = 20;
@@ -43,7 +54,7 @@ public class GuiController implements Initializable {
     @FXML private GridPane holdPiecePanel;
 
 
-    // Core collaborators
+    // Core systems
     private RendererManager rendererManager;
     private NotificationManager notificationManager;
     private InputEventListener eventListener;
@@ -52,6 +63,10 @@ public class GuiController implements Initializable {
     private PauseManager pauseManager;
     private Main mainApp;
 
+    /**
+     * Called automatically by JavaFX after FXML loading.
+     * Sets up fonts, input focus, and pause system.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadFont();
@@ -64,15 +79,31 @@ public class GuiController implements Initializable {
         pauseManager = new PauseManager(this::updatePauseButtonIcon);
     }
 
+    /**
+     * Injects the main application for scene switching.
+     *
+     * @param main the main application instance
+     */
     public void setMainApp(Main main) {
         this.mainApp = main;
     }
 
+    /**
+     * Starts the game by creating a new GameController instance.
+     * GameController will call back into this GUI.
+     */
     public void startGame() {
         // Main will create GameController externally
         new GameController(this);
     }
 
+    /**
+     * Initializes all visual elements: board, renderer, notifications,
+     * next piece, and game loop.
+     *
+     * @param boardMatrix matrix representing the board background
+     * @param brick initial falling brick view data
+     */
     public void initGameView(int[][] boardMatrix, ViewData brick) {
 
         stopGameLoop();
@@ -80,7 +111,7 @@ public class GuiController implements Initializable {
         rendererManager = new RendererManager(gamePanel, brickPanel, nextPiecePanel, holdPiecePanel, BRICK_SIZE);
 
         rendererManager.initBoard(boardMatrix);
-        rendererManager.initFallingBrick(brick);
+        rendererManager.renderFalling(brick);
 
         notificationManager = new NotificationManager(groupNotification);
 
@@ -90,7 +121,12 @@ public class GuiController implements Initializable {
         gameLoop.start();
     }
 
-    /** EVENT LISTENER + INPUT SETUP **/
+    /**
+     * Registers the event listener (typically {@link GameController})
+     * and installs keyboard input handlers.
+     *
+     * @param eventListener the listener for gameplay input events
+     */
     public void setEventListener(InputEventListener eventListener) {
         this.eventListener = eventListener;
 
@@ -105,7 +141,13 @@ public class GuiController implements Initializable {
         gamePanel.setOnKeyPressed(inputHandler.getKeyHandler());
     }
 
-    /** MOVEMENT — unified handling for down / hard drop */
+
+    /**
+     * Unified handler for movement actions such as soft drop or hard drop.
+     *
+     * @param handler function to apply movement
+     * @param e       the move event
+     */
     private void onMove(Function<MoveEvent, ViewData> handler, MoveEvent e) {
         if (pauseManager.isPaused()) return;
 
@@ -117,7 +159,9 @@ public class GuiController implements Initializable {
         requestFocus();
     }
 
-    /** ROW CLEAR */
+    /**
+     * Displays row clear notification and sound effect.
+     */
     private void showRowClear() {
         ClearRow row = eventListener.pollLastClearRow();
         if (row != null && row.getLinesRemoved() > 0) {
@@ -126,7 +170,11 @@ public class GuiController implements Initializable {
         }
     }
 
-    /** BRICK REFRESH */
+    /**
+     * Refreshes the falling brick, ghost piece, and held piece rendering.
+     *
+     * @param brick current brick view data
+     */
     private void refreshBrick(ViewData brick) {
         if (pauseManager.isPaused()) return;
 
@@ -135,14 +183,21 @@ public class GuiController implements Initializable {
         rendererManager.renderFalling(brick);
         rendererManager.renderGhost(brick, eventListener.getBoardMatrix());
         rendererManager.renderHoldPiece(eventListener.getHeldBrickMatrix());
+
     }
 
-    /** BACKGROUND UPDATE */
+    /**
+     * Updates the board background after line clears or piece locks.
+     *
+     * @param board updated background matrix
+     */
     public void refreshGameBackground(int[][] board) {
         rendererManager.renderBoard(board);
     }
 
-    /** BUTTON ACTIONS **/
+    /**
+     * Restarts the game while keeping the current scene.
+     */
     @FXML
     private void restartGame() {
         MusicManager.playSFX("button.mp3");
@@ -153,6 +208,9 @@ public class GuiController implements Initializable {
         requestFocus();
     }
 
+    /**
+     * Returns to the main menu scene.
+     */
     @FXML
     private void handleStartMenu() {
         MusicManager.playSFX("button.mp3");
@@ -165,6 +223,9 @@ public class GuiController implements Initializable {
         }
     }
 
+    /**
+     * Toggles pause state and updates game loop + button icon.
+     */
     @FXML
     private void pauseGame() {
         MusicManager.playSFX("button.mp3");
@@ -176,7 +237,12 @@ public class GuiController implements Initializable {
         requestFocus();
     }
 
-    /** PAUSE ICON UPDATE */
+    /**
+     * Updates the pause/resume icon on the pause button.
+     *
+     * @param btn    the button to update
+     * @param paused whether the game is paused
+     */
     private void updatePauseButtonIcon(Button btn, boolean paused) {
         String img = paused ? "/images/resume.png" : "/images/pause.png";
 
@@ -189,20 +255,37 @@ public class GuiController implements Initializable {
         } catch (Exception ignored) {}
     }
 
-    /** LEVEL / SPEED / NEXT PIECE */
+    /**
+     * Displays the next Tetrimino in the preview panel.
+     *
+     * @param next the next piece data
+     */
     public void showNextPiece(ViewData next) {
         rendererManager.renderNextPiece(next);
     }
 
+    /**
+     * Shows a level-up notification animation.
+     *
+     * @param newLevel the new level number
+     */
     public void showLevelUp(int newLevel) {
         notificationManager.showLevelUpNotification(newLevel);
     }
 
+
+    /**
+     * Adjusts the game loop speed based on the level.
+     *
+     * @param level the new level
+     */
     public void setSpeedForLevel(int level) {
         gameLoop.setRate(1 + (level - 1) * 0.2);
     }
 
-    /** GAME OVER */
+    /**
+     * Handles game over: stops loop, saves high score, switches scene.
+     */
     public void gameOver() {
         stopGameLoop();
 
@@ -220,7 +303,12 @@ public class GuiController implements Initializable {
     }
 
 
-    /** BINDINGS **/
+    /**
+     * Binds the score property to the score label
+     * and updates the high score in real time.
+     *
+     * @param score score property from GameController
+     */
     public void bindScore(IntegerProperty score) {
         scoreLabel.textProperty().bind(score.asString("%d"));
 
@@ -234,23 +322,41 @@ public class GuiController implements Initializable {
     }
 
 
+    /**
+     * Binds cleared lines to UI label.
+     *
+     * @param lines the property tracking cleared lines
+     */
     public void bindLines(IntegerProperty lines) {
         linesLabel.textProperty().bind(lines.asString("%d"));
     }
 
+    /**
+     * Binds level property to UI label.
+     *
+     * @param level level property
+     */
     public void bindLevel(IntegerProperty level) {
         levelLabel.textProperty().bind(level.asString("%d"));
     }
 
-    /** UTILITY **/
+    /**
+     * Stops the game loop safely.
+     */
     private void stopGameLoop() {
         if (gameLoop != null) gameLoop.stop();
     }
 
+    /**
+     * Requests keyboard focus on the game panel.
+     */
     private void requestFocus() {
         Platform.runLater(() -> gamePanel.requestFocus());
     }
 
+    /**
+     * Loads custom Tetris digital font.
+     */
     private void loadFont() {
         try {
             Font.loadFont(getClass().getClassLoader()
