@@ -15,7 +15,7 @@
 
 
 .scoreClass {
-    -fx-font-family: "Let's go Digital";
+    -fx-font-family: "Fredoka One";
     -fx-font-size: 38px;
     -fx-text-fill: white;
     -fx-effect: dropshadow(three-pass-box, rgba(255,255,255,0.2), 2, 0, 0, 1);
