@@ -156,9 +156,23 @@ public class BrickManager {
     public Point getCurrentOffset() {
         return new Point(currentOffset);
     }
-
+    /**
+     * Moves the current brick one cell downward.
+     *
+     * @return {@code true} if the move was successful, {@code false} if blocked
+     */
     public boolean moveDown() { return move(0, 1); }
+    /**
+     * Moves the current brick one cell to the left.
+     *
+     * @return {@code true} if the move was successful, {@code false} if blocked
+     */
     public boolean moveLeft() { return move(-1, 0); }
+    /**
+     * Moves the current brick one cell to the right.
+     *
+     * @return {@code true} if the move was successful, {@code false} if blocked
+     */
     public boolean moveRight() { return move(1, 0); }
     /**
      * Attempts to move the current brick by the specified offset.

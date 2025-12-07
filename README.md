@@ -4,6 +4,12 @@ This project is a JavaFX implementation of the classic Tetris game.
 https://github.com/ushara-voni/DMS_CW2025.git
 
 ## Compilation Instructions
+* This project uses JavaFX and Maven  
+* Before compiling ensure the following is installed:
+  * JDK 17 or higher
+  * Maven 3.8 +  
+* Compile the Project: `mvn clean compile`
+* Run the Game: `mvn javafx:run`
 
 ## Project Structure
 ```bash
@@ -66,7 +72,7 @@ DMS_CW2025/
 │   │           └── style.css
 │   │
 ├── README.md
-└── pom.xml   (or build.gradle)
+└── pom.xml   
 
 ```
 
@@ -101,10 +107,6 @@ DMS_CW2025/
 * **Game Over Screen**: The last screen the player sees. Consists of Home, Restart, Exit buttons and Score and HighScore.
 * **Instructions Screen**: Shows the player instructions to play the game
 
-
-
-
-## Implemented and Not Working Properly
 
 ## Features Not Implemented
 * **Settings** : To change the volume of music or change keys settings for game mechanics
@@ -251,8 +253,8 @@ DMS_CW2025/
 * Improved input handling with `InputHandler` for soft drop, hard drop , hold and rotation.
 * Added pause/resume system with dynamic button icons
 * Integrated scene switching via Main for menu/ game over screens
-* Added level up notifications and game speed adjustements
-* Before GuiController handled everything manaually (ie draing rectanles , input , gameloop and notifications in one class)
+* Added level up notifications and game speed adjustments
+* Before GuiController handled everything manually (ie drawing rectangles , input , gameloop and notifications in one class)
 * Now responsibilities are split into dedicated manager classes
 
 ### `EventType.java`
@@ -285,6 +287,30 @@ DMS_CW2025/
 * `Brick.java`(interface)
 * `Brick Rotator.java`
 
+### Individual Brick Classes(`IBrick`,`JBrick`,`LBrick`,`OBrick`,`SBrick`,`TBrick`,`ZBrick`)
+* Previously , each Tetromino type had its own class
+* This caused lots of repetitive code for rotation logic, color and matrix representation
+* **Refactoring**:Now all bricks are represented by `Brick and TetrominoType` with `BrickFactory` handling creation
+* **Benefit** : centralised logic ,less duplication and fewer files
+
+### `Brick.java`(interface) and `BrickRotator.java`
+* Interfaces and separate rotation classes were overcomplicating the design
+* **Refactoring**: rotation logic moved into the Brick class itself and controlled via `MatrixOperations` and `BrickManager`
+* **Benefit**: simpler and single source for each brick's state and rotation
+
+### `RandomBrickGenerator.java` and `BrickGenerator.java`(interface)
+* Changed to a factory pattern for brick production
+* **Refactoring** : Centralised in `BrickFactory` to implement the Factory Pattern, so all brick creation is consistent
+
+### `DownData.java` and `NextShapeInfo.java`
+* These were data holding classes for gameplay events
+* However `ViewData` already exists to handle data holding
+*  **Refactoring** : Replaced by `ViewData`
+
+### `GameOverPanel.java`
+* When changing UI , GameOverPanel was not required anymore
+* **Refactoring** : replaced with `GameOverController`
+
 ## Changes made to pom.xml
 This project's `pom.xml` has been updated to support full JavaFX functionality and audio playback.Additions are:
 * JavaFX Base module
@@ -305,10 +331,28 @@ This project's `pom.xml` has been updated to support full JavaFX functionality a
 * There was a bug in original code where game over happens too quickly
 * Change the y value the `createNewBrick` method that was in `SimpleBoard` class originally.
 
+### Grid and Brick Misalignment
+* In the UI, the falling brick and board grid were not aligned properly 
+* This could confuse the player in terms of which row and column the brick is actually positioned
+* This was caused due to rendering issues and CSS
+* There was inconsistent `Hgap` and `Vgap` values
+* CSS `window_style.css` had padding around the borders which added more to the misalignment
+* How it was solved
+  * Ensured CSS did not add padding/margins that modify the cells in grid placement.
+  * `#gamePanel {     
+    -fx-background-color: #1d1d1d;
+    -fx-padding: 0;
+    -fx-hgap: 0;
+    -fx-vgap: 0;
+    -fx-border-color: #2e2e2e;
+    -fx-border-width: 0;
+    }
+`
 ### Hold Brick not working correctly
 * When implementing the Hold system ,several issues appeared:
-  * The held brick sometimes kepts its old rotation
-  * Swaping the current with the held brick cuase inconsistent shapes
+  * The held brick sometimes kept its old rotation
+  * When restarting the game sometimes the held brick from previous game will still be there
+  * Swapping the current with the held brick cause inconsistent shapes
   * After using hold once,holding again in the same turn still worked(which should not happen)
 
 * How it was solved
@@ -347,7 +391,7 @@ This project's `pom.xml` has been updated to support full JavaFX functionality a
   
 ## Design implementation
 
-### `Factory Pattern
+### Factory Pattern
 The `BrickFactory` class implements the Factory Design Pattern to centralise the creation of all Tetromino bricks used in the game.
 Instead of instantiating `new Brick(...)` across multiple classes , the factor ensures a single , consistent place responsible for
 * Constructing bricks based on a given `TetrominoType`
@@ -356,18 +400,26 @@ Instead of instantiating `new Brick(...)` across multiple classes , the factor e
 ### Facade Pattern
 The `RendererManager` provides one simple interface for all rendering operations
 Internally it delegates work to multiple subsystems:
-* BoardRenderer
-* BrickRenderer
-* PreviewRenderer
+* `BoardRenderer`
+* `BrickRenderer`
+* `PreviewRenderer`
 
 ### Observer Pattern
 The `InputHandler` implements the Observer pattern by:
 * Observing a source of events
 * Reacting to those events 
-* NOtifying other components(game logic and UI) about these changes
+* Notifying other components(game logic and UI) about these changes
 
-
-
-
+### Singleton Pattern
+* The `MusicManager` uses the Singleton Design pattern to ensure the game has a single global controller for all audio
+* It provides:
+  * One shared instance of the background music player
+  * Guaranteed prevention of overlapping soundtracks
+  * Centralised control for:
+    * `playBGM()`
+    * `stopBGM()`
+    * `setVolume()`
+    * `playSFX()`
+    
 
   

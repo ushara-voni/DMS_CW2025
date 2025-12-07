@@ -77,11 +77,10 @@ public class NotificationPanel extends BorderPane {
                         "-fx-effect: dropshadow(gaussian, gold, 20, 0.8, 0, 0);"
         );
 
-        // Optional: center the LEVEL UP popup horizontally
-        setLayoutX((getParent().getLayoutBounds().getWidth() - getWidth()) / 2);
-        setLayoutY(-50); // slightly higher than score popups
 
-        // Use same animation as showScore
+        setLayoutX((getParent().getLayoutBounds().getWidth() - getWidth()) / 2);
+        setLayoutY(-50);
+
         FadeTransition ft = new FadeTransition(Duration.millis(2000), this);
         TranslateTransition tt = new TranslateTransition(Duration.millis(2500), this);
         tt.setToY(this.getLayoutY() - 40);

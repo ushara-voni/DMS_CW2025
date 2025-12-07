@@ -17,18 +17,23 @@ public class GameOverController {
 
     private Main mainApp;
 
+    /**Displays the player's final score. */
     @FXML
     private Label finalScoreLabel;
 
+    /**Button used to restart the game. */
     @FXML
     private Button restartButton;
 
+    /** Button used to return to the main menu. */
     @FXML
     private Button backMenuButton;
 
+    /** Button used ot exit the game */
     @FXML
     private Button exitButton;
 
+   /** Displays the saved high score */
     @FXML private Label highScoreLabel;
 
     private int finalScore;
@@ -71,7 +76,7 @@ public class GameOverController {
      */
     @FXML
     private void handleRestart(ActionEvent event) throws Exception {
-        MusicManager.playSFX("button.mp3");
+        MusicManager.getInstance().playSFX("button.mp3");
         mainApp.showGameScreen();
     }
 
@@ -84,7 +89,7 @@ public class GameOverController {
      */
     @FXML
     private void handleBackToMenu(ActionEvent event) throws Exception {
-        MusicManager.playSFX("button.mp3");
+        MusicManager.getInstance().playSFX("button.mp3");
         mainApp.showMainMenu();
     }
 
@@ -96,7 +101,7 @@ public class GameOverController {
      */
     @FXML
     private void handleExit(ActionEvent event) {
-        MusicManager.playSFX("button.mp3");
+        MusicManager.getInstance().playSFX("button.mp3");
         System.exit(0);
     }
 }

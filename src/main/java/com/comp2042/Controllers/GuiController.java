@@ -39,18 +39,25 @@ public class GuiController implements Initializable {
     private static final int BRICK_Y_OFFSET = -42;
     private static final int INITIAL_DROP_DELAY = 400;
 
-    // FXML
+    /** Main game board gird where locked tiles are rendered*/
     @FXML private GridPane gamePanel;
+    /** Grid responsible for rendering the falling brick*/
     @FXML private GridPane brickPanel;
+    /**Panel showing the next piece preview*/
     @FXML private GridPane nextPiecePanel;
+    /**Group used for floating notifications, score and level*/
     @FXML private Group groupNotification;
-
+    /**Label displaying the current score*/
     @FXML private Label scoreLabel;
+    /**Label displaying the high score*/
     @FXML private Label highscoreLabel;
+    /**Label showing the current level*/
     @FXML private Label levelLabel;
+    /**Label showing total cleared lines*/
     @FXML private Label linesLabel;
-
+    /**Button used to pause or resume the game*/
     @FXML private Button pauseButton;
+    /**Panel showing the held Tetromino*/
     @FXML private GridPane holdPiecePanel;
 
 
@@ -165,7 +172,7 @@ public class GuiController implements Initializable {
     private void showRowClear() {
         ClearRow row = eventListener.pollLastClearRow();
         if (row != null && row.getLinesRemoved() > 0) {
-            MusicManager.playSFX("bonus.mp3");
+            MusicManager.getInstance().playSFX("bonus.mp3");
             notificationManager.showScoreNotification(row.getScoreBonus());
         }
     }
@@ -200,7 +207,7 @@ public class GuiController implements Initializable {
      */
     @FXML
     private void restartGame() {
-        MusicManager.playSFX("button.mp3");
+        MusicManager.getInstance().playSFX("button.mp3");
         stopGameLoop();
         eventListener.createNewGame();
         pauseManager.setPaused(false);
@@ -213,7 +220,7 @@ public class GuiController implements Initializable {
      */
     @FXML
     private void handleStartMenu() {
-        MusicManager.playSFX("button.mp3");
+        MusicManager.getInstance().playSFX("button.mp3");
         stopGameLoop();
 
         try {
@@ -228,7 +235,7 @@ public class GuiController implements Initializable {
      */
     @FXML
     private void pauseGame() {
-        MusicManager.playSFX("button.mp3");
+        MusicManager.getInstance().playSFX("button.mp3");
         pauseManager.togglePause(pauseButton);
 
         if (pauseManager.isPaused()) gameLoop.pause();
@@ -256,7 +263,7 @@ public class GuiController implements Initializable {
     }
 
     /**
-     * Displays the next Tetrimino in the preview panel.
+     * Displays the next Tetromino in the preview panel.
      *
      * @param next the next piece data
      */
@@ -334,7 +341,7 @@ public class GuiController implements Initializable {
     /**
      * Binds level property to UI label.
      *
-     * @param level level property
+     * @param level level property representing the current level
      */
     public void bindLevel(IntegerProperty level) {
         levelLabel.textProperty().bind(level.asString("%d"));

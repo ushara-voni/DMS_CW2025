@@ -18,13 +18,13 @@ public class MainMenuController {
      * Used to trigger screen transitions.
      */
     private Main mainApp;
-
+    /**Button used to start the game*/
     @FXML
     private Button startButton;
-
+    /**Button used to open the instructions screen*/
     @FXML
     private Button instructionsButton;
-
+    /**Button used to exit the application*/
     @FXML
     private Button exitButton;
 
@@ -49,7 +49,7 @@ public class MainMenuController {
      */
     @FXML
     private void handleStartGame(ActionEvent event) throws Exception {
-        MusicManager.playSFX("button.mp3");
+        MusicManager.getInstance().playSFX("button.mp3");
         mainApp.showGameScreen();
     }
 
@@ -61,7 +61,7 @@ public class MainMenuController {
      */
     @FXML
     public void handleInstructions() throws Exception {
-        MusicManager.playSFX("button.mp3");
+        MusicManager.getInstance().playSFX("button.mp3");
         mainApp.showInstructions();
     }
 
@@ -73,7 +73,7 @@ public class MainMenuController {
      */
     @FXML
     private void handleExit(ActionEvent event) {
-        MusicManager.playSFX("button.mp3");
+        MusicManager.getInstance().playSFX("button.mp3");
         System.exit(0);
     }
 
@@ -84,7 +84,7 @@ public class MainMenuController {
      */
     public void initialize() {
         // Play main menu BGM
-        MusicManager.playBGM("bgm.mp3");
+        MusicManager.getInstance().playBGM("bgm.mp3");
     }
 
 }

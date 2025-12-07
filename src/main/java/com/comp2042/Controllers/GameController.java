@@ -46,7 +46,7 @@ public class GameController implements InputEventListener {
      */
     public GameController(GuiController gui) {
         viewGuiController = gui;
-        MusicManager.playBGM("gameplay.mp3");
+        MusicManager.getInstance().playBGM("gameplay.mp3");
 
         // initial game setup
         board.createNewBrick();
@@ -80,8 +80,8 @@ public class GameController implements InputEventListener {
         refreshView();
 
         if (gameOver) {
-            MusicManager.playSFX("game-over-sfx.mp3");
-            MusicManager.playBGM("game_over.mp3");
+            MusicManager.getInstance().playSFX("game-over-sfx.mp3");
+            MusicManager.getInstance().playBGM("game_over.mp3");
             // Ask GUI to stop its loop + show game over screen
             viewGuiController.gameOver();
         }
@@ -201,7 +201,7 @@ public class GameController implements InputEventListener {
      */
     @Override
     public void createNewGame() {
-        MusicManager.playBGM("gameplay.mp3");
+        MusicManager.getInstance().playBGM("gameplay.mp3");
         board.newGame();
         linesCleared.set(0);
         level.set(1);
@@ -209,6 +209,8 @@ public class GameController implements InputEventListener {
     }
 
     /**
+     * Returns the total lines cleared
+     *
      * @return observable property containing total lines cleared
      */
     public IntegerProperty linesClearedProperty() {
@@ -238,6 +240,8 @@ public class GameController implements InputEventListener {
     }
 
     /**
+     * Returns the player's current level
+     *
      * @return observable level property
      */
     public IntegerProperty levelProperty() {
@@ -256,6 +260,7 @@ public class GameController implements InputEventListener {
     /**
      * Handles the hold-piece action.
      *
+     * @param event the {@link MoveEvent} triggering the hold (ignored)
      * @return updated view data after hold action
      */
     @Override

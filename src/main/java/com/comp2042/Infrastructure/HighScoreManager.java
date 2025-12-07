@@ -12,9 +12,10 @@ public class HighScoreManager {
 
     /**
      * Loads the stored high score from the file.
-     * Returns 0 if the file does not exist or cannot be read.
+     * If the file does not exist or cannot be read, this method safely
+     * returns {@code 0} as the default score.
      *
-     * @return the current high score
+     * @return the stored high score, or {@code 0} if unavailable
      */
     public static int loadHighScore() {
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {

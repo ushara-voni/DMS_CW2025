@@ -38,7 +38,7 @@ public class InstructionsController {
     private void handleBackToMenu() {
         try {
             if (mainApp != null) {
-                MusicManager.playSFX("button.mp3");
+                MusicManager.getInstance().playSFX("button.mp3");
                 mainApp.showMainMenu();
             }
         } catch (Exception e) {
